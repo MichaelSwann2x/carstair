@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carstair — Research Laboratory for Quantitative Finance</title>
+  <meta name="description" content="Private research laboratory for quantitative finance. Strategy development, systematic algorithms, evaluation environments, and expert judgment capture." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0c0c;
+      --bg-elevated: #141414;
+      --bg-card: #1a1a1a;
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e6e3;
+      --text-muted: #9a9690;
+      --accent: #c4b8a5;
+      --accent-dim: #8a7f6e;
+      --white: #f5f4f1;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, .display {
+      font-family: 'Cinzel', serif;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--white);
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(12,12,12,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; max-width: 1120px; margin: 0 auto; padding: 0 24px;
+    }
+    .logo {
+      font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 600;
+      letter-spacing: 0.08em; color: var(--white);
+    }
+    .nav-links { display: flex; gap: 32px; font-size: 0.875rem; color: var(--text-muted); }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      font-size: 0.8125rem; padding: 8px 16px;
+      border: 1px solid var(--border); border-radius: 4px;
+      color: var(--white); transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--bg-elevated); }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 120px 24px 80px; position: relative;
+      background: radial-gradient(ellipse at 50% 30%, #1a1814 0%, #0c0c0c 70%);
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero h1 {
+      font-size: clamp(2.75rem, 7vw, 5.5rem); line-height: 1.05;
+      max-width: 14ch; margin-bottom: 24px;
+    }
+    .hero p {
+      font-size: 1.125rem; color: var(--text-muted); max-width: 36ch;
+      margin-bottom: 40px;
+    }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; font-size: 0.875rem; font-weight: 500;
+      border-radius: 4px; transition: all 0.2s; cursor: pointer; border: none;
+    }
+    .btn-primary { background: var(--white); color: #0c0c0c; }
+    .btn-primary:hover { background: var(--accent); }
+    .btn-ghost {
+      background: transparent; color: var(--white);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--bg-elevated); }
+
+    /* Sections */
+    section { padding: 100px 0; }
+    .section-label {
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent-dim); margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.15;
+      margin-bottom: 24px; max-width: 18ch;
+    }
+    .section-desc { color: var(--text-muted); max-width: 48ch; margin-bottom: 48px; }
+
+    /* Modules grid */
+    .modules-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .module-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 6px; padding: 28px 24px; transition: border-color 0.2s;
+    }
+    .module-card:hover { border-color: rgba(196,184,165,0.25); }
+    .module-card h3 {
+      font-size: 1.125rem; margin-bottom: 10px; color: var(--accent);
+    }
+    .module-card p { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* Process / Kimpton style */
+    .process {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+    }
+    @media (max-width: 768px) { .process { grid-template-columns: 1fr; } }
+    .process-steps { display: flex; flex-direction: column; gap: 24px; }
+    .step {
+      display: flex; gap: 16px; align-items: flex-start;
+    }
+    .step-num {
+      font-family: 'Cinzel', serif; font-size: 1.25rem; color: var(--accent-dim);
+      min-width: 32px;
+    }
+    .step h4 { font-size: 1rem; margin-bottom: 4px; }
+    .step p { font-size: 0.875rem; color: var(--text-muted); }
+
+    /* Custom work */
+    .custom-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    }
+    @media (max-width: 768px) { .custom-grid { grid-template-columns: 1fr; } }
+    .custom-card {
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: 6px; padding: 32px;
+    }
+    .custom-card h3 { font-size: 1.25rem; margin-bottom: 12px; }
+    .custom-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px; }
+    .custom-card ul { list-style: none; font-size: 0.9rem; color: var(--text-muted); }
+    .custom-card li { padding: 6px 0; padding-left: 16px; position: relative; }
+    .custom-card li::before {
+      content: '–'; position: absolute; left: 0; color: var(--accent-dim);
+    }
+
+    /* Access form */
+    .access {
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: 8px; padding: 48px; max-width: 520px; margin: 0 auto;
+      text-align: center;
+    }
+    .access h2 { font-size: 1.75rem; margin-bottom: 12px; }
+    .access p { color: var(--text-muted); margin-bottom: 32px; font-size: 0.95rem; }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    .form-group label {
+      display: block; font-size: 0.75rem; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%; padding: 12px 14px; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 4px;
+      color: var(--white); font-size: 0.9rem; outline: none;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--accent-dim);
+    }
+    .form-submit {
+      width: 100%; margin-top: 8px; padding: 14px;
+      background: var(--white); color: #0c0c0c; font-weight: 500;
+      border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;
+    }
+    .form-submit:hover { background: var(--accent); }
+    .form-note {
+      margin-top: 16px; font-size: 0.75rem; color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border); padding: 48px 0 32px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .footer-brand .logo { margin-bottom: 12px; display: block; }
+    .footer-brand p { font-size: 0.85rem; color: var(--text-muted); max-width: 28ch; }
+    .footer-col h4 {
+      font-family: 'Inter', sans-serif; font-size: 0.75rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block; font-size: 0.875rem; color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 24px;
+      font-size: 0.75rem; color: var(--text-muted);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+
+    /* Mobile nav */
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo">CARSTAIR</a>
+      <div class="nav-links">
+        <a href="#modules">Modules</a>
+        <a href="#research">Research</a>
+        <a href="#custom">Custom</a>
+        <a href="#access">Access</a>
+      </div>
+      <a href="#access" class="nav-cta">Request Access</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1 class="display">Research under pressure</h1>
+    <p>Private laboratory for quantitative finance. We develop strategies, encode systems, and evaluate judgment under real market conditions.</p>
+    <div class="hero-ctas">
+      <a href="#access" class="btn btn-primary">Request access</a>
+      <a href="#modules" class="btn btn-ghost">View modules</a>
+    </div>
+  </header>
+
+  <section id="modules">
+    <div class="container">
+      <div class="section-label">Core capabilities</div>
+      <h2 class="section-title">What we build</h2>
+      <p class="section-desc">Primary focus is research and development of trading strategies and systematic algorithms. Consultancy remains available as a side service.</p>
+      <div class="modules-grid">
+        <div class="module-card">
+          <h3>Strategy R&amp;D</h3>
+          <p>Design, refine, and evolve trading strategies and methodologies. Company-backed systems are the primary emphasis.</p>
+        </div>
+        <div class="module-card">
+          <h3>Systematic Algorithms</h3>
+          <p>Encode strategies into production-ready, systematic trading algorithms with clear risk frameworks.</p>
+        </div>
+        <div class="module-card">
+          <h3>Evaluation Arenas</h3>
+          <p>Private environments and behavioural benchmarks for models and agents under live market pressure.</p>
+        </div>
+        <div class="module-card">
+          <h3>Judgment Capture</h3>
+          <p>Structure expert reasoning, trade-offs, and decision traces into high-signal training data and RL environments.</p>
+        </div>
+        <div class="module-card">
+          <h3>Direct Insight</h3>
+          <p>Side service: 1:1 sessions for session bias, key levels, entry, stop, and target framing.</p>
+        </div>
+        <div class="module-card">
+          <h3>Live &amp; Prop Flexibility</h3>
+          <p>Compatible with live accounts and prop-firm environments across discretionary, systematic, and hybrid styles.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="research" style="background: var(--bg-elevated);">
+    <div class="container">
+      <div class="process">
+        <div>
+          <div class="section-label">Method</div>
+          <h2 class="section-title">How systems are built</h2>
+          <p class="section-desc">We treat every strategy as a living system. Observation, structure, and deployment form a continuous loop under real market feedback.</p>
+        </div>
+        <div class="process-steps">
+          <div class="step">
+            <span class="step-num">01</span>
+            <div>
+              <h4>Observe</h4>
+              <p>Deep market and macro study without bias. Rigorous data, quiet conviction.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">02</span>
+            <div>
+              <h4>Structure</h4>
+              <p>Turn insight into edge. Systematic frameworks, risk-first architecture, asymmetric positioning.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">03</span>
+            <div>
+              <h4>Deploy</h4>
+              <p>Execute with discipline and scale. Capital is deployed precisely. Outcomes compound.</p>
+            </div>
+          </div>
+          <div class="step">
+            <span class="step-num">04</span>
+            <div>
+              <h4>Evaluate</h4>
+              <p>Live arenas and trajectory recording. Every checkpoint is scored against reality.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="custom">
+    <div class="container">
+      <div class="section-label">Custom development</div>
+      <h2 class="section-title">Bring an idea. Leave with a system.</h2>
+      <p class="section-desc">Request a specific strategy or methodology for further development. Quotes can be offset by performance rights.</p>
+      <div class="custom-grid">
+        <div class="custom-card">
+          <h3>Methodology Package</h3>
+          <p>We research, refine, and document a complete trading methodology around your idea or mandate.</p>
+          <ul>
+            <li>Full written methodology</li>
+            <li>Risk parameters and invalidation rules</li>
+            <li>Session and regime guidance</li>
+            <li>Quote-based engagement</li>
+          </ul>
+        </div>
+        <div class="custom-card">
+          <h3>Systematic Algorithm</h3>
+          <p>Encode the methodology into a production-ready systematic trading algorithm.</p>
+          <ul>
+            <li>Executable system design</li>
+            <li>Clear entry, exit, and risk logic</li>
+            <li>Compatible with live accounts or prop firms</li>
+            <li>Optional 5–15% performance share offset on the initial quote</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="access">
+    <div class="container">
+      <div class="access">
+        <h2>Access is limited</h2>
+        <p>We work with institutional desks, prop firms, serious traders, and AI labs. Tell us what you need.</p>
+        <form id="access-form" onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label for="email">Institutional email</label>
+            <input type="email" id="email" name="email" required placeholder="you@firm.com" />
+          </div>
+          <div class="form-group">
+            <label for="intent">Intent</label>
+            <select id="intent" name="intent" required>
+              <option value="">Select intent</option>
+              <option value="strategy-rd">Strategy R&amp;D / methodology</option>
+              <option value="algorithm">Systematic algorithm development</option>
+              <option value="evaluation">Evaluation environments</option>
+              <option value="insight">Direct insight session</option>
+              <option value="other">Other / general inquiry</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="note">Brief note (optional)</label>
+            <input type="text" id="note" name="note" placeholder="Context or specific request" />
+          </div>
+          <button type="submit" class="form-submit">Request conversation</button>
+          <p class="form-note">Private · Confidential · By invitation</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="logo">CARSTAIR</span>
+          <p>Private research laboratory for quantitative finance. Strategies, systems, and judgment under pressure.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Modules</h4>
+          <a href="#modules">Strategy R&amp;D</a>
+          <a href="#modules">Systematic Algorithms</a>
+          <a href="#modules">Evaluation Arenas</a>
+          <a href="#modules">Judgment Capture</a>
+        </div>
+        <div class="footer-col">
+          <h4>Work</h4>
+          <a href="#custom">Custom Development</a>
+          <a href="#research">Method</a>
+          <a href="#access">Direct Insight</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="#access">Request Access</a>
+          <a href="mailto:research@carstair.lab">research@carstair.lab</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Carstair. All rights reserved.</span>
+        <span>Private research laboratory</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const intent = document.getElementById('intent').value;
+      const note = document.getElementById('note').value;
+      // Static site: form data can be wired to Formspree, Netlify Forms, or Cloudflare later
+      alert('Request recorded. We will respond if there is a fit.\n\nEmail: ' + email + '\nIntent: ' + intent);
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
