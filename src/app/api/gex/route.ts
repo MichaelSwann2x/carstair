@@ -1,35 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { generateGex, type AssetClass } from "@/lib/gex";
-import { consumeCredit, parseTier } from "@/lib/credits";
+import { NextResponse } from "next/server";
 
-const VALID_ASSET: AssetClass[] = ["index", "futures", "forex", "commodity"];
-
-function parseAssetClass(value: unknown): AssetClass {
-  if (typeof value === "string" && VALID_ASSET.includes(value as AssetClass)) {
-    return value as AssetClass;
-  }
-  return "futures";
+/** Legacy GEX endpoint removed — use TradingView charts at /app/charts */
+export async function POST() {
+  return NextResponse.json(
+    {
+      error: "Synthetic GEX removed. Use /app/charts for live TradingView data.",
+    },
+    { status: 410 }
+  );
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const symbol = String(body.symbol || "ES").toUpperCase().replace(/[^A-Z0-9]/g, "") || "ES";
-    const assetClass = parseAssetClass(body.assetClass);
-    const userId = String(body.userId || "anon");
-    const tier = parseTier(body.tier);
-
-    const credit = consumeCredit(userId, 1, tier);
-    if (!credit.ok) {
-      return NextResponse.json(
-        { error: credit.message, remaining: credit.remaining },
-        { status: 429 }
-      );
-    }
-
-    const result = generateGex(symbol, assetClass);
-    return NextResponse.json({ ...result, remainingCredits: credit.remaining });
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-  }
+export async function GET() {
+  return NextResponse.json(
+    { error: "Gone. Use /app/charts." },
+    { status: 410 }
+  );
 }
