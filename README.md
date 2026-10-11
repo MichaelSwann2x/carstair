@@ -1,32 +1,27 @@
-# CARSTAIR
+# CARSTAIR v2
 
-## Cloudflare settings (REQUIRED — copy exactly)
+Multi-page trading workspace — Gotham glossy UI, TradingView charts, Nico AI, standard auth.
+
+## Cloudflare deploy
 
 | Setting | Value |
 |---------|--------|
 | **Build command** | `npx opennextjs-cloudflare build` |
 | **Deploy command** | `npx wrangler deploy` |
-| **Root directory** | `/` |
 
-Do **NOT** set Build command to `npm run build`.
+Do **not** set build to `npm run build` only if you need OpenNext packaging — OpenNext calls `next build` internally.
 
-Why: OpenNext runs `next build` internally. If `npm run build` is also OpenNext, it recurses forever and times out.
+## Routes
+- `/` marketing
+- `/signup` `/login` standard accounts
+- `/pricing` tier details
+- `/app` overview
+- `/app/charts` TradingView free widget
+- `/app/nico` Nico AI (credits in side panel)
+- `/app/models` tier-gated catalogue
+- `/app/billing` plans
 
-- `npm run build` → `next build` only (used by OpenNext)
-- Cloudflare build step → `npx opennextjs-cloudflare build` (runs Next + packages for Workers)
-- Deploy → `npx wrangler deploy`
-
-### Custom domain
-Workers → carstair → Custom Domains → add your domain.
-
-### Local
-```bash
-npm install
-npm run dev
-npm run opennext   # production OpenNext build
-npm run deploy     # needs CF login
-```
-
-Contact: COO Michael Manyewe — michaelmanyewe18@gmail.com
+## Contact
+COO Michael Manyewe — michaelmanyewe18@gmail.com
 
 Educational only. Not financial advice.

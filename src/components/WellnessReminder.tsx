@@ -2,28 +2,28 @@
 
 import { useEffect, useState } from "react";
 
-export function WellnessReminder() {
+export default function WellnessReminder() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setShow(true), 25 * 60 * 1000);
+    const t = setTimeout(() => setShow(true), 45 * 60 * 1000);
     return () => clearTimeout(t);
   }, []);
 
   if (!show) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 max-w-sm glass rounded-xl p-4 shadow-2xl animate-fade">
-      <p className="text-sm font-medium">Take a moment.</p>
-      <p className="text-xs text-[#888] mt-1 leading-relaxed">
-        You’ve been here a while. Stand up, drink some water, or walk for a few
-        minutes. Markets will still be here.
+    <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-50 glass rounded-xl p-4 text-sm animate-fade">
+      <p className="font-medium">Take a short break</p>
+      <p className="text-xs text-[#8a8a96] mt-1 leading-relaxed">
+        You've been here a while. Water, stretch, or a quick walk helps more than
+        another chart refresh.
       </p>
       <button
         onClick={() => setShow(false)}
-        className="mt-3 text-xs text-[#888] hover:text-white"
+        className="mt-3 text-xs gloss-btn px-3 py-1.5 rounded-lg"
       >
-        Dismiss
+        Got it
       </button>
     </div>
   );
