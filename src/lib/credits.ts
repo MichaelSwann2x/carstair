@@ -1,64 +1,36 @@
-export type Tier = "free" | "silver" | "gold" | "platinum" | "onyx";
+import { parseTier, type TierId, TIERS } from "./tiers";
 
-export const TIER_LIMITS: Record<Tier, { dailyCredits: number; models: number; quinQueries: number; gexCalls: number }> = {
-  free:     { dailyCredits: 3,   models: 5,   quinQueries: 2,  gexCalls: 2 },
-  silver:   { dailyCredits: 25,  models: 15,  quinQueries: 15, gexCalls: 20 },
-  gold:     { dailyCredits: 60,  models: 30,  quinQueries: 40, gexCalls: 50 },
-  platinum: { dailyCredits: 150, models: 50,  quinQueries: 100, gexCalls: 120 },
-  onyx:     { dailyCredits: 500, models: 50,  quinQueries: 300, gexCalls: 400 },
-};
+type Bucket = { day: string; used: number };
+const store = new Map<string, Bucket>();
 
-export const PRICING = {
-  silver:   { price: 19,  name: "Silver" },
-  gold:     { price: 37,  name: "Gold" },
-  platinum: { price: 68,  name: "Platinum" },
-  onyx:     { price: 170, name: "Onyx" },
-} as const;
-
-const VALID_TIERS: Tier[] = ["free", "silver", "gold", "platinum", "onyx"];
-
-/** Safely coerce any string into a valid Tier */
-export function parseTier(value: string | null | undefined): Tier {
-  if (value && VALID_TIERS.includes(value as Tier)) {
-    return value as Tier;
-  }
-  return "free";
-}
-
-const usageStore = new Map<string, { credits: number; lastReset: string; tier: Tier }>();
-
-function todayKey() {
+function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
-export function getOrCreateUser(userId: string, tier: Tier = "free") {
-  const key = `${userId}:${todayKey()}`;
-  let record = usageStore.get(key);
-  if (!record) {
-    const limits = TIER_LIMITS[tier];
-    record = { credits: limits.dailyCredits, lastReset: todayKey(), tier };
-    usageStore.set(key, record);
-  }
-  return record;
+function limitFor(tier: TierId) {
+  return TIERS.find((t) => t.id === tier)?.dailyCredits ?? 5;
 }
 
-export function consumeCredit(
-  userId: string,
-  amount = 1,
-  tier: Tier = "free"
-): { ok: boolean; remaining: number; message?: string } {
-  const user = getOrCreateUser(userId, tier);
-  if (user.credits < amount) {
-    return {
-      ok: false,
-      remaining: user.credits,
-      message: "Daily credits exhausted. Upgrade or wait for daily reset.",
-    };
-  }
-  user.credits -= amount;
-  return { ok: true, remaining: user.credits };
+export function getRemaining(userId: string, tier: TierId): number {
+  const key = `${userId}:${tier}`;
+  const b = store.get(key);
+  const lim = limitFor(tier);
+  if (!b || b.day !== today()) return lim;
+  return Math.max(0, lim - b.used);
 }
 
-export function getRemaining(userId: string, tier: Tier = "free") {
-  return getOrCreateUser(userId, tier).credits;
+export function consume(userId: string, tier: TierId, cost = 1): { ok: boolean; remaining: number } {
+  const key = `${userId}:${tier}`;
+  const lim = limitFor(tier);
+  let b = store.get(key);
+  if (!b || b.day !== today()) b = { day: today(), used: 0 };
+  if (b.used + cost > lim) {
+    store.set(key, b);
+    return { ok: false, remaining: Math.max(0, lim - b.used) };
+  }
+  b.used += cost;
+  store.set(key, b);
+  return { ok: true, remaining: lim - b.used };
 }
+
+export { parseTier, type TierId };
