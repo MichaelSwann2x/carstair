@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { TIER_LIMITS } from "@/lib/credits";
+import { TIER_LIMITS, parseTier } from "@/lib/credits";
 
-const SAMPLE_MODELS = [
+const SAMPLE_MODELS: { id: string; name: string; category: string }[] = [
   { id: "net-gex", name: "Net Gamma Exposure", category: "Positioning" },
   { id: "call-resistance", name: "Call Resistance Levels", category: "Positioning" },
   { id: "put-support", name: "Put Support Levels", category: "Positioning" },
@@ -18,21 +18,24 @@ const SAMPLE_MODELS = [
   { id: "fx-gamma", name: "FX Options Gamma", category: "FX" },
   { id: "commodity-gex", name: "Commodity Futures GEX", category: "Commodities" },
 ];
+
+const CATEGORIES = ["Positioning", "Volatility", "Momentum", "Flow", "Structure"];
 while (SAMPLE_MODELS.length < 52) {
+  const i = SAMPLE_MODELS.length;
   SAMPLE_MODELS.push({
-    id: `model-${SAMPLE_MODELS.length}`,
-    name: `Quantitative Model ${SAMPLE_MODELS.length}`,
-    category: ["Positioning", "Volatility", "Momentum", "Flow", "Structure"][SAMPLE_MODELS.length % 5],
+    id: `model-${i}`,
+    name: `Quantitative Model ${i}`,
+    category: CATEGORIES[i % 5],
   });
 }
 
 export async function GET(req: NextRequest) {
-  const tier = (req.nextUrl.searchParams.get("tier") || "free") as any;
-  const limits = TIER_LIMITS[tier] || TIER_LIMITS.free;
+  const tier = parseTier(req.nextUrl.searchParams.get("tier"));
+  const limits = TIER_LIMITS[tier];
   const models = SAMPLE_MODELS.slice(0, limits.models).map((m) => ({
     ...m,
-    delayed: true,
-    status: "preview",
+    delayed: true as const,
+    status: "preview" as const,
   }));
   return NextResponse.json({ count: models.length, totalAvailable: 52, models, tier });
 }

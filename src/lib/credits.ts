@@ -15,6 +15,16 @@ export const PRICING = {
   onyx:     { price: 170, name: "Onyx" },
 } as const;
 
+const VALID_TIERS: Tier[] = ["free", "silver", "gold", "platinum", "onyx"];
+
+/** Safely coerce any string into a valid Tier */
+export function parseTier(value: string | null | undefined): Tier {
+  if (value && VALID_TIERS.includes(value as Tier)) {
+    return value as Tier;
+  }
+  return "free";
+}
+
 const usageStore = new Map<string, { credits: number; lastReset: string; tier: Tier }>();
 
 function todayKey() {
@@ -32,10 +42,18 @@ export function getOrCreateUser(userId: string, tier: Tier = "free") {
   return record;
 }
 
-export function consumeCredit(userId: string, amount = 1, tier: Tier = "free"): { ok: boolean; remaining: number; message?: string } {
+export function consumeCredit(
+  userId: string,
+  amount = 1,
+  tier: Tier = "free"
+): { ok: boolean; remaining: number; message?: string } {
   const user = getOrCreateUser(userId, tier);
   if (user.credits < amount) {
-    return { ok: false, remaining: user.credits, message: "Daily credits exhausted. Upgrade or wait for daily reset." };
+    return {
+      ok: false,
+      remaining: user.credits,
+      message: "Daily credits exhausted. Upgrade or wait for daily reset.",
+    };
   }
   user.credits -= amount;
   return { ok: true, remaining: user.credits };
