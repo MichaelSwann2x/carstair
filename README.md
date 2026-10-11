@@ -1,29 +1,44 @@
-# Carstair
+# CARSTAIR
 
-Private research laboratory for quantitative finance.
+Intelligence infrastructure for indices, FX, commodities and futures.
 
-## Site
+## Philosophy
+Simple. Forward-thinking. Human.  
+Closed research systems. Delayed quant previews. Limited QUIN assistant. Realistic GEX & IV walls you can run on any contract.
 
-Static site ready for Cloudflare Pages.
+## Stack
+- Next.js 14 (App Router) — dynamic, server + client
+- TypeScript
+- Tailwind (dark Start Labs aesthetic)
+- Credit system (daily limits by tier)
+- Synthetic educational GEX / IV generator
+- Limited QUIN-style assistant
+- Wellness break reminder
 
-### Deploy to Cloudflare Pages
+## Tiers
+| Tier     | Price  | Daily credits |
+|----------|--------|---------------|
+| Free     | $0     | 3             |
+| Silver   | $19    | 25            |
+| Gold     | $37    | 60            |
+| Platinum | $68    | 150           |
+| Onyx     | $170   | 500           |
 
-1. Go to [Cloudflare Dashboard → Pages](https://dash.cloudflare.com/?to=/:account/pages)
-2. Create a new project → Connect to Git
-3. Select the repository `MichaelSwann2x/carstair`
-4. Build settings:
-   - Framework preset: None
-   - Build command: (leave empty)
-   - Build output directory: `/` (root)
-5. Deploy
-6. Attach your custom domain in the project settings
+## Run locally
+```bash
+npm install
+npm run dev
+```
 
-The site is pure static HTML/CSS/JS. No build step required.
+## Security notes
+- Security headers enabled (X-Frame-Options, nosniff, etc.)
+- Credit logic runs server-side
+- No real institutional data is claimed
+- Stripe checkout buttons are placeholders — add your Stripe secret key and price IDs to activate live payments
 
-## Business
+## Stripe
+1. Create products/prices in Stripe for Silver/Gold/Platinum/Onyx.
+2. Add `STRIPE_SECRET_KEY` and price IDs to `.env.local`.
+3. Implement `/api/stripe/checkout` using the official Stripe Node SDK.
 
-- Primary: Research & Development of trading strategies, methodologies, and systematic algorithms
-- Secondary: Direct insight consultancy sessions
-- Custom strategy development available (quote + optional 5–15% performance share offset)
-- Flexible for live accounts and prop firms
-- Company-backed strategies are the main focus
+Educational use only. Not financial advice.
