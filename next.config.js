@@ -1,9 +1,3 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  poweredByHeader: false,
-  // Required for OpenNext on Cloudflare
-  // output: undefined (OpenNext handles this)
-};
-
-module.exports = nextConfig;
+// Deprecated — use next.config.ts
+// Kept empty so CF/OpenNext does not double-load CJS config.
+module.exports = {};
