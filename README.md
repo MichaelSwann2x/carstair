@@ -2,29 +2,37 @@
 
 Intelligence infrastructure for indices, FX, commodities and futures.
 
-## Cloudflare deploy (important)
+## Cloudflare Workers (OpenNext) — required settings
 
-Build **must** produce `.open-next` before deploy.
+In the Cloudflare dashboard for this Worker/project:
 
 | Setting | Value |
 |---------|--------|
 | **Build command** | `npm run build` |
-| **Deploy command** | `npx wrangler deploy` or `npm run deploy` |
+| **Deploy command** | `npx wrangler deploy` |
+| **Root directory** | `/` (repo root) |
+| **Node version** | 20 or 22 |
 
-`npm run build` runs `opennextjs-cloudflare build` (Next build + OpenNext packaging).
+`npm run build` runs **`opennextjs-cloudflare build`**, which produces `.open-next/`.
+Deploy then uploads that output. Do **not** set build to plain `next build` only.
 
-Do **not** use plain `next build` as the only build step — deploy will fail with "Could not find compiled Open Next config".
+### After deploy
+Workers → **carstair** → **Custom Domains** → add your domain.
 
-### Custom domain
-Cloudflare dashboard → Workers → carstair → Custom Domains → add your domain.
-
-## Local
+### Local
 ```bash
 npm install
-npm run dev
+npm run dev          # development
+npm run preview      # production-like on Workers runtime
+npm run deploy       # build + deploy (needs CF auth)
 ```
 
-## Contact
-COO: Michael Manyewe — michaelmanyewe18@gmail.com
+## Product
+- Limited QUIN assistant (credit-gated)
+- 50+ model previews (delayed)
+- GEX / IV walls for futures, indices, FX, commodities
+- Tiers: Free / Silver $19 / Gold $37 / Platinum $68 / Onyx $170
+- Wellness break reminder
+- Contact: COO Michael Manyewe — michaelmanyewe18@gmail.com
 
-Educational only. Not financial advice.
+Educational tools only. Not financial advice.

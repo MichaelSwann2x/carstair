@@ -3,8 +3,11 @@ node_modules
 .open-next
 .wrangler
 .dev.vars
-.env*
+.env
+.env.*
+!.env.example
 *.log
 .DS_Store
 dist
 .vercel
+cloudflare-env.d.ts

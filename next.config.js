@@ -1,3 +1,2 @@
-// Deprecated — use next.config.ts
-// Kept empty so CF/OpenNext does not double-load CJS config.
-module.exports = {};
+// Intentionally empty — config lives in next.config.ts only.
+// Do not add module.exports here or OpenNext may load the wrong config.
