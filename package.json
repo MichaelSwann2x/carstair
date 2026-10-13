@@ -1,6 +1,6 @@
 {
   "name": "carstair",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -19,9 +19,8 @@
     "lucide-react": "0.424.0",
     "clsx": "2.1.1",
     "tailwind-merge": "2.6.1",
-    "stripe": "16.12.0",
-    "zod": "3.25.76",
-    "jose": "5.10.0"
+    "jose": "5.10.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@types/node": "20.19.43",

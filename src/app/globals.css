@@ -5,63 +5,35 @@
 :root {
   --bg: #0c0c0e;
   --surface: #141417;
-  --surface-2: #1a1a1f;
   --border: #2a2a32;
-  --border-glow: #3a3a45;
   --text: #e8e8ec;
   --muted: #8a8a96;
-  --accent: #c4c4d0;
-  --green: #4ade80;
-  --red: #f87171;
-  --gold: #d4af37;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Glossy Gotham surfaces */
 .glass {
   background: linear-gradient(145deg, rgba(26, 26, 31, 0.95), rgba(18, 18, 22, 0.9));
   border: 1px solid var(--border);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.03) inset,
-    0 8px 32px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(12px);
-}
-
-.glass-hover:hover {
-  border-color: var(--border-glow);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
-    0 12px 40px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .gloss-btn {
-  background: linear-gradient(180deg, #2a2a32 0%, #1a1a1f 100%);
+  background: linear-gradient(180deg, #2a2a32, #1a1a1f);
   border: 1px solid #3a3a45;
-  color: var(--text);
-  transition: all 0.2s ease;
 }
 .gloss-btn:hover {
-  background: linear-gradient(180deg, #34343e 0%, #222228 100%);
-  border-color: #4a4a55;
+  background: linear-gradient(180deg, #34343e, #222228);
 }
 .gloss-btn-primary {
-  background: linear-gradient(180deg, #e8e8ec 0%, #c4c4d0 100%);
+  background: linear-gradient(180deg, #e8e8ec, #c4c4d0);
   color: #0c0c0e;
-  border: 1px solid #f0f0f4;
   font-weight: 600;
-}
-.gloss-btn-primary:hover {
-  background: linear-gradient(180deg, #ffffff 0%, #d8d8e0 100%);
 }
 
 input, select, textarea {
@@ -73,25 +45,7 @@ input, select, textarea {
 }
 input:focus, select:focus, textarea:focus {
   border-color: #555566;
-  box-shadow: 0 0 0 3px rgba(196, 196, 208, 0.08);
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #333340;
-  border-radius: 3px;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.animate-fade {
-  animation: fadeUp 0.4s ease forwards;
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #333340; border-radius: 3px; }

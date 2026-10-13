@@ -1,0 +1,66 @@
+export const MODEL_CATEGORIES = [
+  {
+    id: "technical",
+    name: "Technical / Price-action",
+    what: "Rules based on price, volume, indicators",
+    use: "Day trading, swing",
+    example: "Moving-average crossover, breakout of high-of-day, RSI divergence",
+  },
+  {
+    id: "mean-reversion",
+    name: "Statistical / Mean-reversion",
+    what: "Assumes prices revert to a mean or relationship",
+    use: "Day trading, pairs",
+    example: "Z-score of price vs VWAP, pairs trading (A–B spread)",
+  },
+  {
+    id: "momentum",
+    name: "Momentum / Trend-following",
+    what: "Rides continuation of strong moves",
+    use: "Intraday & longer",
+    example: "Breakout + volume confirmation, ADX filter",
+  },
+  {
+    id: "orderflow",
+    name: "Market-making / Order-flow",
+    what: "Captures bid-ask spread or short-term imbalances",
+    use: "High-frequency / prop day trading",
+    example: "Quote around fair value, react to large orders or book imbalance",
+  },
+  {
+    id: "factor",
+    name: "Factor / Quant multi-factor",
+    what: "Scores assets on measured characteristics",
+    use: "Portfolio / systematic",
+    example: "Value + momentum + quality, rank & rebalance",
+  },
+  {
+    id: "ml",
+    name: "Machine-learning / Statistical arbitrage",
+    what: "Learns patterns from historical data",
+    use: "Quant funds",
+    example: "Features → classifier/regression for short-term edge",
+  },
+  {
+    id: "execution",
+    name: "Execution models",
+    what: "How to get in/out with minimal impact",
+    use: "All styles",
+    example: "TWAP, VWAP, adaptive algorithms, optimal trading speed",
+  },
+] as const;
+
+export const SEED_MODELS = [
+  { id: "sm1", category: "technical", title: "MA crossover + session filter", summary: "Fast/slow MA cross only inside defined session; optional ATR stop." },
+  { id: "sm2", category: "technical", title: "High-of-day breakout", summary: "Enter on HOD break with volume spike; invalidate below prior swing." },
+  { id: "sm3", category: "mean-reversion", title: "VWAP z-score fade", summary: "Fade extremes of (price−VWAP)/σ when z exceeds threshold." },
+  { id: "sm4", category: "mean-reversion", title: "Pairs spread z-score", summary: "Trade residual of A vs B when spread z-score mean-reverts." },
+  { id: "sm5", category: "momentum", title: "Breakout + ADX", summary: "Trend filter ADX>threshold then break prior range with volume." },
+  { id: "sm6", category: "momentum", title: "Continuation after pullback", summary: "In uptrend, buy first pullback to EMA with higher low structure." },
+  { id: "sm7", category: "orderflow", title: "Large print reaction", summary: "React to aggressive size through level; fade or follow by context." },
+  { id: "sm8", category: "factor", title: "Momentum + quality rank", summary: "Cross-sectional rank on return momentum and quality proxy; rebalance." },
+  { id: "sm9", category: "ml", title: "Short-horizon classifier frame", summary: "Features: returns, vol, range; label next-bar direction; strict walk-forward." },
+  { id: "sm10", category: "execution", title: "VWAP participation", summary: "Slice orders to track VWAP with max participation rate." },
+  { id: "sm11", category: "execution", title: "TWAP schedule", summary: "Equal slices over horizon; pause on gap or news window." },
+  { id: "sm12", category: "technical", title: "RSI divergence swing", summary: "Price lower low / RSI higher low as discretionary swing setup." },
+];
