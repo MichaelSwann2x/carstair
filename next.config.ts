@@ -6,3 +6,9 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Optional: only for local `next dev` with Cloudflare bindings
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+if (process.env.NODE_ENV === "development") {
+  initOpenNextCloudflareForDev().catch(() => {});
+}
