@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hashPassword, signSession } from "@/lib/auth";
-import { users } from "@/lib/store";
+import { users, type UserRecord } from "@/lib/store";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const password = String(body.password || "");
   const hash = await hashPassword(password);
 
-  let found = null as ReturnType<typeof users.get>;
+  let found: UserRecord | null = null;
   for (const u of users.values()) {
     if (u.email === login || u.username === login) {
       found = u;
