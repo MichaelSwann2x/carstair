@@ -1,27 +1,31 @@
-# CARSTAIR v2
+# CARSTAIR v3
 
-Multi-page trading workspace — Gotham glossy UI, TradingView charts, Nico AI, standard auth.
+Charts · Models · Papers · World (Reddit) · Board
 
-## Cloudflare deploy
+**Removed:** Nico, subscriptions, synthetic GEX.
 
-| Setting | Value |
-|---------|--------|
-| **Build command** | `npx opennextjs-cloudflare build` |
-| **Deploy command** | `npx wrangler deploy` |
+## Cloudflare environment variables
 
-Do **not** set build to `npm run build` only if you need OpenNext packaging — OpenNext calls `next build` internally.
+```
+AUTH_SECRET=long-random-string
+NEXT_PUBLIC_APP_URL=https://carstair.com
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+REDDIT_CLIENT_ID=
+REDDIT_CLIENT_SECRET=
+```
 
-## Routes
-- `/` marketing
-- `/signup` `/login` standard accounts
-- `/pricing` tier details
-- `/app` overview
-- `/app/charts` TradingView free widget
-- `/app/nico` Nico AI (credits in side panel)
-- `/app/models` tier-gated catalogue
-- `/app/billing` plans
+Google redirect URI: `https://carstair.com/api/auth/google/callback`  
+Reddit redirect URI: `https://carstair.com/api/reddit/callback`
 
-## Contact
-COO Michael Manyewe — michaelmanyewe18@gmail.com
+## Deploy
 
-Educational only. Not financial advice.
+- Build: `npx opennextjs-cloudflare build`
+- Deploy: `npx wrangler deploy`
+
+## Notes
+
+- Accounts are session-sandboxed (JWT cookie). User models/notes only load for that userId.
+- Papers are SSRN abstract links (no hosted PDFs).
+- TradingView: public chart widget; set TV username in Profile. Private custom indicators need TradingView while logged into their product.
+- In-memory store resets on cold starts — wire Cloudflare KV/D1 for durable multi-user production.
