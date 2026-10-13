@@ -30,48 +30,37 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5 py-12">
-      <div className="w-full max-w-md glass rounded-2xl p-7">
-        <Link href="/" className="text-xs tracking-[0.14em] font-semibold">CARSTAIR</Link>
-        <h1 className="text-2xl font-light mt-5">Sign up</h1>
-        <a
-          href="/api/auth/google"
-          className="mt-5 w-full gloss-btn rounded-lg py-2.5 text-sm flex items-center justify-center"
-        >
-          Continue with Google
-        </a>
-        <div className="flex items-center gap-3 my-4">
-          <div className="h-px flex-1 bg-[#2a2a32]" />
-          <span className="text-[11px] text-[#555]">or</span>
-          <div className="h-px flex-1 bg-[#2a2a32]" />
-        </div>
-        <form onSubmit={submit} className="space-y-3">
+      <div className="w-full max-w-sm card p-8 rise">
+        <Link href="/" className="text-xs tracking-[0.16em] font-semibold">CARSTAIR</Link>
+        <h1 className="text-2xl font-light mt-6">Sign up</h1>
+        <form onSubmit={submit} className="mt-6 space-y-3">
           {(
             [
-              ["name", "Full name", "text"],
+              ["name", "Name", "text"],
               ["email", "Email", "email"],
-              ["phone", "Phone (optional)", "tel"],
+              ["phone", "Phone", "tel"],
               ["username", "Username", "text"],
               ["password", "Password", "password"],
             ] as const
           ).map(([k, label, type]) => (
             <div key={k}>
-              <label className="text-[11px] text-[#8a8a96]">{label}</label>
+              <label className="text-[11px] text-zinc-500">{label}</label>
               <input
                 type={type}
-                className="mt-1 w-full px-3 py-2 text-sm"
-                value={(form as Record<string, string>)[k]}
+                className="mt-1 w-full px-3 py-2.5 text-sm"
+                value={form[k]}
                 onChange={(e) => setForm({ ...form, [k]: e.target.value })}
-                required={k !== "phone" && k !== "name"}
+                required={k === "email" || k === "username" || k === "password"}
               />
             </div>
           ))}
           {error && <p className="text-xs text-red-400">{error}</p>}
-          <button type="submit" disabled={loading} className="w-full gloss-btn-primary rounded-lg py-2.5 text-sm">
-            {loading ? "Creating…" : "Create account"}
+          <button type="submit" disabled={loading} className="btn btn-primary w-full py-2.5">
+            {loading ? "…" : "Create account"}
           </button>
         </form>
-        <p className="text-xs text-[#666] mt-4 text-center">
-          Have an account? <Link href="/login" className="text-[#aaa] hover:text-white">Log in</Link>
+        <p className="text-xs text-zinc-600 mt-5 text-center">
+          Have an account? <Link href="/login" className="text-zinc-300">Log in</Link>
         </p>
       </div>
     </div>

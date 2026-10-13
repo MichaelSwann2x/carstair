@@ -30,34 +30,26 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5 py-12">
-      <div className="w-full max-w-md glass rounded-2xl p-7">
-        <Link href="/" className="text-xs tracking-[0.14em] font-semibold">CARSTAIR</Link>
-        <h1 className="text-2xl font-light mt-5">Log in</h1>
-        <a href="/api/auth/google" className="mt-5 w-full gloss-btn rounded-lg py-2.5 text-sm flex items-center justify-center">
-          Continue with Google
-        </a>
-        <div className="flex items-center gap-3 my-4">
-          <div className="h-px flex-1 bg-[#2a2a32]" />
-          <span className="text-[11px] text-[#555]">or</span>
-          <div className="h-px flex-1 bg-[#2a2a32]" />
-        </div>
-        <form onSubmit={submit} className="space-y-3">
+    <div className="min-h-screen flex items-center justify-center px-5">
+      <div className="w-full max-w-sm card p-8 rise">
+        <Link href="/" className="text-xs tracking-[0.16em] font-semibold">CARSTAIR</Link>
+        <h1 className="text-2xl font-light mt-6">Log in</h1>
+        <form onSubmit={submit} className="mt-6 space-y-3">
           <div>
-            <label className="text-[11px] text-[#8a8a96]">Email or username</label>
-            <input className="mt-1 w-full px-3 py-2 text-sm" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <label className="text-[11px] text-zinc-500">Email or username</label>
+            <input className="mt-1 w-full px-3 py-2.5 text-sm" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div>
-            <label className="text-[11px] text-[#8a8a96]">Password</label>
-            <input type="password" className="mt-1 w-full px-3 py-2 text-sm" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <label className="text-[11px] text-zinc-500">Password</label>
+            <input type="password" className="mt-1 w-full px-3 py-2.5 text-sm" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
           {error && <p className="text-xs text-red-400">{error}</p>}
-          <button type="submit" disabled={loading} className="w-full gloss-btn-primary rounded-lg py-2.5 text-sm">
+          <button type="submit" disabled={loading} className="btn btn-primary w-full py-2.5">
             {loading ? "…" : "Log in"}
           </button>
         </form>
-        <p className="text-xs text-[#666] mt-4 text-center">
-          New? <Link href="/signup" className="text-[#aaa] hover:text-white">Sign up</Link>
+        <p className="text-xs text-zinc-600 mt-5 text-center">
+          No account? <Link href="/signup" className="text-zinc-300">Sign up</Link>
         </p>
       </div>
     </div>

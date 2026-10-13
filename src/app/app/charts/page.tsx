@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const SYMBOLS = [
   { id: "CME_MINI:ES1!", label: "ES" },
@@ -14,246 +14,157 @@ const SYMBOLS = [
   { id: "TVC:DXY", label: "DXY" },
 ];
 
-type Builtin = { id: string; name: string };
-type Mine = { id: string; name: string; studyId: string; script?: string };
+const STUDIES = [
+  { id: "STD;SMA", name: "SMA" },
+  { id: "STD;EMA", name: "EMA" },
+  { id: "STD;RSI", name: "RSI" },
+  { id: "STD;MACD", name: "MACD" },
+  { id: "STD;BB", name: "Bollinger" },
+  { id: "STD;Volume", name: "Volume" },
+  { id: "STD;VWAP", name: "VWAP" },
+  { id: "STD;ATR", name: "ATR" },
+];
 
 export default function ChartsPage() {
   const [symbol, setSymbol] = useState(SYMBOLS[0].id);
+  const [studies, setStudies] = useState<string[]>(["STD;Volume"]);
   const [tvUser, setTvUser] = useState("");
-  const [connected, setConnected] = useState(false);
-  const [connectInput, setConnectInput] = useState("");
-  const [builtin, setBuiltin] = useState<Builtin[]>([]);
-  const [mine, setMine] = useState<Mine[]>([]);
-  const [activeStudies, setActiveStudies] = useState<string[]>(["STD;Volume"]);
-  const [customName, setCustomName] = useState("");
-  const [customScript, setCustomScript] = useState("");
-  const [showConnect, setShowConnect] = useState(false);
-  const box = useRef<HTMLDivElement>(null);
+  const [tvInput, setTvInput] = useState("");
+  const [showTv, setShowTv] = useState(false);
+  const host = useRef<HTMLDivElement>(null);
 
-  const loadMe = useCallback(() => {
+  useEffect(() => {
     fetch("/api/auth/me")
       .then((r) => r.json())
       .then((d) => {
-        const u = d.user?.tradingViewUsername || "";
-        setTvUser(u);
-        setConnected(!!d.user?.tradingViewConnected || !!u);
-        setConnectInput(u);
-      })
-      .catch(() => {});
-  }, []);
-
-  const loadIndicators = useCallback(() => {
-    fetch("/api/indicators")
-      .then((r) => r.json())
-      .then((d) => {
-        setBuiltin(d.builtin || []);
-        setMine(d.mine || []);
+        if (d.user?.tradingViewUsername) {
+          setTvUser(d.user.tradingViewUsername);
+          setTvInput(d.user.tradingViewUsername);
+        }
       })
       .catch(() => {});
   }, []);
 
   useEffect(() => {
-    loadMe();
-    loadIndicators();
-  }, [loadMe, loadIndicators]);
+    if (!host.current) return;
+    host.current.innerHTML = "";
 
-  useEffect(() => {
-    if (!box.current) return;
-    box.current.innerHTML = "";
-    const holder = document.createElement("div");
-    holder.id = "tv_chart_host";
-    holder.style.height = "640px";
-    box.current.appendChild(holder);
+    const container = document.createElement("div");
+    container.className = "tradingview-widget-container";
+    container.style.height = "640px";
+    container.style.width = "100%";
 
-    const studies = activeStudies.filter((s) => s.startsWith("STD;"));
+    const widget = document.createElement("div");
+    widget.className = "tradingview-widget-container__widget";
+    widget.style.height = "100%";
+    widget.style.width = "100%";
+    container.appendChild(widget);
 
     const script = document.createElement("script");
-    script.src = "https://s3.tradingview.com/tv.js";
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.type = "text/javascript";
     script.async = true;
-    script.onload = () => {
-      // @ts-expect-error TradingView
-      if (typeof TradingView === "undefined") return;
-      // @ts-expect-error widget
-      new TradingView.widget({
-        container_id: "tv_chart_host",
-        symbol,
-        interval: "60",
-        timezone: "Etc/UTC",
-        theme: "dark",
-        style: "1",
-        locale: "en",
-        toolbar_bg: "#0c0c0e",
-        enable_publishing: false,
-        hide_top_toolbar: false,
-        hide_legend: false,
-        save_image: false,
-        allow_symbol_change: true,
-        details: false,
-        hotlist: false,
-        calendar: false,
-        withdateranges: true,
-        width: "100%",
-        height: 640,
-        studies: studies.length ? studies : undefined,
-      });
-    };
-    document.body.appendChild(script);
-    return () => {
-      script.remove();
-    };
-  }, [symbol, activeStudies]);
+    script.innerHTML = JSON.stringify({
+      autosize: true,
+      symbol,
+      interval: "60",
+      timezone: "Etc/UTC",
+      theme: "dark",
+      style: "1",
+      locale: "en",
+      backgroundColor: "#0a0a0b",
+      gridColor: "rgba(255,255,255,0.04)",
+      hide_top_toolbar: false,
+      hide_legend: false,
+      allow_symbol_change: true,
+      save_image: false,
+      calendar: false,
+      support_host: "https://www.tradingview.com",
+      studies: studies,
+    });
+
+    container.appendChild(script);
+    host.current.appendChild(container);
+  }, [symbol, studies]);
+
+  function toggle(id: string) {
+    setStudies((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  }
 
   async function connectTv(e: React.FormEvent) {
     e.preventDefault();
     const res = await fetch("/api/tv/connect", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: connectInput }),
+      body: JSON.stringify({ username: tvInput }),
     });
-    const data = await res.json();
     if (res.ok) {
-      setConnected(true);
-      setTvUser(data.username);
-      setShowConnect(false);
+      const d = await res.json();
+      setTvUser(d.username);
+      setShowTv(false);
     }
   }
 
-  function toggleStudy(id: string) {
-    setActiveStudies((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-  }
-
-  async function saveCustom(e: React.FormEvent) {
-    e.preventDefault();
-    if (!customName.trim()) return;
-    await fetch("/api/indicators", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: customName,
-        studyId: "custom",
-        script: customScript,
-      }),
-    });
-    setCustomName("");
-    setCustomScript("");
-    loadIndicators();
-  }
-
   return (
-    <div className="animate-fade page-wrap">
+    <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
         <h1 className="text-2xl font-light tracking-tight">Charts</h1>
         <div className="flex flex-wrap gap-2 items-center">
-          <select
-            value={symbol}
-            onChange={(e) => setSymbol(e.target.value)}
-            className="px-3 py-2 text-sm"
-          >
+          <select className="px-3 py-2 text-sm" value={symbol} onChange={(e) => setSymbol(e.target.value)}>
             {SYMBOLS.map((s) => (
               <option key={s.id} value={s.id}>{s.label}</option>
             ))}
           </select>
-          {connected && tvUser ? (
+          {tvUser ? (
             <a
               href={`https://www.tradingview.com/u/${encodeURIComponent(tvUser)}/`}
               target="_blank"
               rel="noreferrer"
-              className="text-[11px] glass px-3 py-2 rounded-lg hover:text-white"
+              className="btn btn-ghost text-xs"
             >
-              TV @{tvUser}
+              @{tvUser}
             </a>
           ) : (
-            <button
-              onClick={() => setShowConnect(true)}
-              className="gloss-btn-primary text-xs px-3 py-2 rounded-lg"
-            >
+            <button type="button" className="btn btn-primary text-xs" onClick={() => setShowTv(true)}>
               Connect TradingView
             </button>
           )}
         </div>
       </div>
 
-      {showConnect && (
-        <form
-          onSubmit={connectTv}
-          className="glass bubble-card rounded-2xl p-5 mb-5 max-w-md animate-fade"
-        >
-          <p className="text-sm font-medium">Connect TradingView</p>
-          <p className="text-[11px] text-[#8b8b99] mt-1 mb-3">
-            Same idea as Reddit — sign in with your TV username so CARSTAIR knows your account.
-          </p>
+      {showTv && (
+        <form onSubmit={connectTv} className="card p-4 mb-4 max-w-sm space-y-3">
           <input
-            className="w-full px-3 py-2 text-sm mb-3"
+            className="w-full px-3 py-2 text-sm"
             placeholder="TradingView username"
-            value={connectInput}
-            onChange={(e) => setConnectInput(e.target.value)}
+            value={tvInput}
+            onChange={(e) => setTvInput(e.target.value)}
             required
           />
           <div className="flex gap-2">
-            <button type="submit" className="gloss-btn-primary text-xs px-4 py-2 rounded-lg">
-              Connect
-            </button>
-            <button type="button" onClick={() => setShowConnect(false)} className="gloss-btn text-xs px-4 py-2 rounded-lg">
-              Cancel
-            </button>
+            <button type="submit" className="btn btn-primary">Connect</button>
+            <button type="button" className="btn btn-ghost" onClick={() => setShowTv(false)}>Cancel</button>
           </div>
         </form>
       )}
 
       <div className="flex flex-col lg:flex-row gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="glass glass-static bubble-card rounded-2xl overflow-hidden">
-            <div ref={box} className="w-full min-h-[640px]" />
-          </div>
+        <div className="flex-1 card overflow-hidden min-h-[640px]">
+          <div ref={host} className="w-full h-[640px]" />
         </div>
-
-        <aside className="w-full lg:w-64 shrink-0 space-y-4">
-          <div className="glass bubble-card rounded-2xl p-4 animate-fade-delay-1">
-            <p className="text-[11px] uppercase tracking-wider text-[#666] mb-3">Indicators</p>
-            <div className="space-y-1 max-h-48 overflow-y-auto">
-              {builtin.map((b) => (
-                <label key={b.id} className="flex items-center gap-2 text-xs text-[#aaa] cursor-pointer hover:text-white py-1">
-                  <input
-                    type="checkbox"
-                    checked={activeStudies.includes(b.id)}
-                    onChange={() => toggleStudy(b.id)}
-                    className="rounded"
-                  />
-                  {b.name}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="glass bubble-card rounded-2xl p-4 animate-fade-delay-2">
-            <p className="text-[11px] uppercase tracking-wider text-[#666] mb-3">Your indicators</p>
-            {mine.length === 0 && (
-              <p className="text-[11px] text-[#555]">Save a custom script below.</p>
-            )}
-            <ul className="space-y-1 mb-3">
-              {mine.map((m) => (
-                <li key={m.id} className="text-xs text-[#aaa] truncate">{m.name}</li>
-              ))}
-            </ul>
-            <form onSubmit={saveCustom} className="space-y-2">
-              <input
-                className="w-full px-2 py-1.5 text-xs"
-                placeholder="Name"
-                value={customName}
-                onChange={(e) => setCustomName(e.target.value)}
-              />
-              <textarea
-                className="w-full px-2 py-1.5 text-xs min-h-[80px] font-mono"
-                placeholder="Pine or notes for your indicator…"
-                value={customScript}
-                onChange={(e) => setCustomScript(e.target.value)}
-              />
-              <button type="submit" className="gloss-btn-primary text-[11px] px-3 py-1.5 rounded-lg w-full">
-                Save indicator
-              </button>
-            </form>
+        <aside className="w-full lg:w-52 card p-4 h-fit">
+          <p className="text-[11px] text-zinc-500 mb-3 tracking-wide uppercase">Indicators</p>
+          <div className="space-y-1">
+            {STUDIES.map((s) => (
+              <label key={s.id} className="flex items-center gap-2 text-sm text-zinc-400 cursor-pointer py-1">
+                <input
+                  type="checkbox"
+                  checked={studies.includes(s.id)}
+                  onChange={() => toggle(s.id)}
+                />
+                {s.name}
+              </label>
+            ))}
           </div>
         </aside>
       </div>

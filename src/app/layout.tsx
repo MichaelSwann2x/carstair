@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import BubbleBackground from "@/components/BubbleBackground";
+import Ambient from "@/components/Ambient";
 
 export const metadata: Metadata = {
   title: "CARSTAIR",
-  description: "Charts, models, papers, world chat and board.",
+  description: "Charts, models, papers, world, board",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen antialiased">
-        <BubbleBackground />
-        <div className="page-wrap relative z-[1]">{children}</div>
+      <body>
+        <Ambient />
+        <div className="page">{children}</div>
       </body>
     </html>
   );
