@@ -14,6 +14,7 @@ export async function GET() {
       avatar: user.avatar || null,
       provider: user.provider,
       tradingViewUsername: user.tradingViewUsername || null,
+      tradingViewConnected: !!(user.tradingViewConnected || user.tradingViewUsername),
       redditUsername: user.redditUsername || null,
     },
   });
