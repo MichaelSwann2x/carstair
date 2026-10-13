@@ -1,21 +1,8 @@
 import { NextResponse } from "next/server";
-import { getSessionUser } from "@/lib/auth";
+import { readSession } from "@/lib/auth";
 
 export async function GET() {
-  const user = await getSessionUser();
+  const user = await readSession();
   if (!user) return NextResponse.json({ user: null }, { status: 401 });
-  return NextResponse.json({
-    user: {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      name: user.name,
-      phone: user.phone,
-      avatar: user.avatar || null,
-      provider: user.provider,
-      tradingViewUsername: user.tradingViewUsername || null,
-      tradingViewConnected: !!(user.tradingViewConnected || user.tradingViewUsername),
-      redditUsername: user.redditUsername || null,
-    },
-  });
+  return NextResponse.json({ user });
 }

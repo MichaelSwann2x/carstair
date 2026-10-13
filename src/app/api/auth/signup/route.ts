@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { hashPassword, signSession } from "@/lib/auth";
+import { hashPassword, signSession, sessionCookie } from "@/lib/auth";
 import { users, usernames, type UserRecord } from "@/lib/store";
 import { uid } from "@/lib/utils";
 
@@ -18,23 +18,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Password min 8 characters" }, { status: 400 });
   }
   if (!/^[a-z0-9_]{3,24}$/.test(username)) {
-    return NextResponse.json({ error: "Username: 3–24 chars, a-z, 0-9, underscore" }, { status: 400 });
-  }
-  if (usernames.has(username)) {
-    return NextResponse.json({ error: "Username taken" }, { status: 409 });
-  }
-  for (const u of users.values()) {
-    if (u.email === email) {
-      return NextResponse.json({ error: "Email already registered" }, { status: 409 });
-    }
+    return NextResponse.json({ error: "Username: 3–24 chars, a-z 0-9 _" }, { status: 400 });
   }
 
   const id = uid();
+  const passwordHash = await hashPassword(password);
   const user: UserRecord = {
     id,
     email,
     username,
-    passwordHash: await hashPassword(password),
+    passwordHash,
     name,
     phone,
     provider: "email",
@@ -43,16 +36,16 @@ export async function POST(req: NextRequest) {
   users.set(id, user);
   usernames.set(username, id);
 
-  const token = await signSession(id);
+  const token = await signSession({
+    id,
+    email,
+    username,
+    name,
+    phone,
+  });
   const res = NextResponse.json({
-    user: { id, email, username, name, avatar: null, provider: "email" },
+    user: { id, email, username, name, avatar: null },
   });
-  res.cookies.set("cs_session", token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-  });
+  res.cookies.set("cs_session", token, sessionCookie(token));
   return res;
 }
