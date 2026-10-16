@@ -22,23 +22,13 @@ export function runExplainableAirworthiness(q: AirworthinessQuery): Airworthines
     "14 CFR 91.407 / corresponding EASA ops — return to service after maintenance",
     "Operator MEL / CDL if deferral is proposed",
   ];
-
   if (q.proposedAction?.toLowerCase().includes("defer")) {
     path.push("MEL category and repair interval must be identified and recorded");
   }
-  if (
-    q.findingSummary?.toLowerCase().includes("structure") ||
-    q.findingSummary?.toLowerCase().includes("skin")
-  ) {
+  if (q.findingSummary?.toLowerCase().includes("structure") || q.findingSummary?.toLowerCase().includes("skin")) {
     path.push("SRM (Structural Repair Manual) allowable damage limits");
     path.push("Damage tolerance / inspection programme impact assessment");
   }
-
-  const precedents = [
-    "Borderline skin dents within SRM limits historically accepted with recurrent inspection",
-    "Open ADs on type must be shown embodied or dispositioned before RTS",
-    "Dual inspection required for critical structural repairs under most approvals",
-  ];
 
   const answer = [
     q.question,
@@ -57,7 +47,11 @@ export function runExplainableAirworthiness(q: AirworthinessQuery): Airworthines
   return {
     answer,
     regulatoryPath: path,
-    precedents,
+    precedents: [
+      "Borderline skin dents within SRM limits historically accepted with recurrent inspection",
+      "Open ADs on type must be shown embodied or dispositioned before RTS",
+      "Dual inspection required for critical structural repairs under most approvals",
+    ],
     residualRisk:
       "Final airworthiness judgment remains with the licensed certifying staff / RTS authority. This explanation does not constitute a release.",
     recommendedNextStep:

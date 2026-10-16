@@ -10,17 +10,17 @@ export const RoleSchema = z.enum([
 export type Role = z.infer<typeof RoleSchema>;
 
 export const UserSchema = z.object({
-  id: z.string(),
-  email: z.string(),
+  id: z.string().uuid(),
+  email: z.string().email(),
   name: z.string(),
   role: RoleSchema,
-  tenantId: z.string(),
+  tenantId: z.string().uuid(),
   createdAt: z.string(),
 });
 export type User = z.infer<typeof UserSchema>;
 
 export const TenantSchema = z.object({
-  id: z.string(),
+  id: z.string().uuid(),
   name: z.string(),
   slug: z.string(),
   encryptionKeyId: z.string(),

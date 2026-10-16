@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Ambient from "@/components/Ambient";
 
 export const metadata: Metadata = {
-  title: "CARSTAIR",
-  description: "Charts, models, papers, world, board",
+  title: "Castair — Aircraft QC & RTS Inspector",
+  description:
+    "Agentic, encrypted, offline-first platform for aviation quality control and return-to-service.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <Ambient />
-        <div className="page">{children}</div>
-      </body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="antialiased min-h-screen">{children}</body>
     </html>
   );
 }

@@ -1,38 +1,41 @@
-export type AircraftStatus = "line" | "in_check" | "rts_pending" | "grounded" | "stored";
+import { z } from "zod";
 
-export interface Aircraft {
-  id: string;
-  registration: string;
-  type: string;
-  serialNumber?: string;
-  status: AircraftStatus;
-  nextDue?: string;
-  operator?: string;
-  base?: string;
-  updatedAt: string;
-}
+export const AircraftSchema = z.object({
+  id: z.string(),
+  registration: z.string(),
+  type: z.string(),
+  serialNumber: z.string().optional(),
+  status: z.enum(["line", "in_check", "rts_pending", "grounded", "stored"]),
+  nextDue: z.string().optional(),
+  operator: z.string().optional(),
+  base: z.string().optional(),
+  updatedAt: z.string(),
+});
+export type Aircraft = z.infer<typeof AircraftSchema>;
 
-export interface WorkPackage {
-  id: string;
-  aircraftId: string;
-  title: string;
-  type: "line" | "a_check" | "c_check" | "heavy" | "mod" | "other";
-  status: "planned" | "open" | "in_progress" | "review" | "closed";
-  plannedStart?: string;
-  plannedEnd?: string;
-  findingsCount: number;
-  openCards: number;
-  updatedAt: string;
-}
+export const WorkPackageSchema = z.object({
+  id: z.string(),
+  aircraftId: z.string(),
+  title: z.string(),
+  type: z.enum(["line", "a_check", "c_check", "heavy", "mod", "other"]),
+  status: z.enum(["planned", "open", "in_progress", "review", "closed"]),
+  plannedStart: z.string().optional(),
+  plannedEnd: z.string().optional(),
+  findingsCount: z.number().default(0),
+  openCards: z.number().default(0),
+  updatedAt: z.string(),
+});
+export type WorkPackage = z.infer<typeof WorkPackageSchema>;
 
-export interface AdSbRecord {
-  id: string;
-  number: string;
-  title: string;
-  type: "AD" | "SB" | "SL";
-  effectiveDate?: string;
-  applicability: string;
-  status: "open" | "embodied" | "n_a" | "deferred";
-  source?: string;
-  aircraftIds: string[];
-}
+export const AdSbRecordSchema = z.object({
+  id: z.string(),
+  number: z.string(),
+  title: z.string(),
+  type: z.enum(["AD", "SB", "SL"]),
+  effectiveDate: z.string().optional(),
+  applicability: z.string(),
+  status: z.enum(["open", "embodied", "n_a", "deferred"]),
+  source: z.string().optional(),
+  aircraftIds: z.array(z.string()).default([]),
+});
+export type AdSbRecord = z.infer<typeof AdSbRecordSchema>;

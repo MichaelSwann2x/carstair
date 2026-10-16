@@ -1,11 +1,4 @@
-export type ConnectorId =
-  | "carstair_native"
-  | "trax"
-  | "amos"
-  | "sap"
-  | "ramco"
-  | "veryon"
-  | "custom";
+export type ConnectorId = "castair_native" | "trax" | "amos" | "sap" | "ramco" | "veryon" | "custom";
 
 export interface ConnectorDefinition {
   id: ConnectorId;
@@ -18,10 +11,9 @@ export interface ConnectorDefinition {
 
 export const CONNECTORS: ConnectorDefinition[] = [
   {
-    id: "carstair_native",
-    name: "Carstair Native CMMS",
-    description:
-      "Built-in offline-first maintenance system. Fast, local, no internet required.",
+    id: "castair_native",
+    name: "Castair Native CMMS",
+    description: "Built-in offline-first maintenance system. Fast, local, no internet required.",
     offlineCapable: true,
     status: "available",
     fields: [],
@@ -29,7 +21,7 @@ export const CONNECTORS: ConnectorDefinition[] = [
   {
     id: "trax",
     name: "Trax",
-    description: "Connect your existing Trax eMRO account.",
+    description: "Connect your existing Trax eMRO / Trax Maintenance account.",
     offlineCapable: false,
     status: "beta",
     fields: [
@@ -53,11 +45,12 @@ export const CONNECTORS: ConnectorDefinition[] = [
   {
     id: "sap",
     name: "SAP",
-    description: "SAP PM / aviation modules.",
+    description: "SAP PM / aviation modules via OData or BAPI gateway.",
     offlineCapable: false,
     status: "planned",
     fields: [
       { key: "baseUrl", label: "Gateway URL", type: "url", required: true },
+      { key: "client", label: "Client", type: "text", required: true },
       { key: "token", label: "Access token", type: "password", required: true },
     ],
   },
@@ -93,7 +86,7 @@ export interface ConnectorConfig {
   connectedAt?: string;
 }
 
-const CONFIG_KEY = (tenantId: string) => `carstair_${tenantId}_connectors`;
+const CONFIG_KEY = (tenantId: string) => `castair_${tenantId}_connectors`;
 
 export function listConnectorConfigs(tenantId: string): ConnectorConfig[] {
   if (typeof window === "undefined") return [];
@@ -106,9 +99,7 @@ export function listConnectorConfigs(tenantId: string): ConnectorConfig[] {
 
 export function saveConnectorConfig(config: ConnectorConfig): void {
   if (typeof window === "undefined") return;
-  const list = listConnectorConfigs(config.tenantId).filter(
-    (c) => c.connectorId !== config.connectorId
-  );
+  const list = listConnectorConfigs(config.tenantId).filter((c) => c.connectorId !== config.connectorId);
   list.push({ ...config, connectedAt: new Date().toISOString() });
   localStorage.setItem(CONFIG_KEY(config.tenantId), JSON.stringify(list));
 }

@@ -1,6 +1,6 @@
 import type { Aircraft, WorkPackage, AdSbRecord } from "./types";
 
-const KEY = (tenantId: string, entity: string) => `carstair_${tenantId}_${entity}`;
+const KEY = (tenantId: string, entity: string) => `castair_${tenantId}_${entity}`;
 
 function load<T>(tenantId: string, entity: string): T[] {
   if (typeof window === "undefined") return [];
@@ -24,10 +24,7 @@ export const localCmms = {
   listAircraft(tenantId: string): Aircraft[] {
     return load<Aircraft>(tenantId, "aircraft");
   },
-  upsertAircraft(
-    tenantId: string,
-    a: Partial<Aircraft> & { registration: string; type: string }
-  ): Aircraft {
+  upsertAircraft(tenantId: string, a: Partial<Aircraft> & { registration: string; type: string }): Aircraft {
     const list = load<Aircraft>(tenantId, "aircraft");
     const existing = list.find((x) => x.registration === a.registration);
     const now = new Date().toISOString();
@@ -54,10 +51,7 @@ export const localCmms = {
   listWorkPackages(tenantId: string): WorkPackage[] {
     return load<WorkPackage>(tenantId, "work_packages");
   },
-  upsertWorkPackage(
-    tenantId: string,
-    wp: Partial<WorkPackage> & { aircraftId: string; title: string }
-  ): WorkPackage {
+  upsertWorkPackage(tenantId: string, wp: Partial<WorkPackage> & { aircraftId: string; title: string }): WorkPackage {
     const list = load<WorkPackage>(tenantId, "work_packages");
     const now = new Date().toISOString();
     if (wp.id) {

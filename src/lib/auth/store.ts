@@ -1,7 +1,7 @@
 import type { Session, Tenant, User, Role } from "./types";
 
-const STORAGE_KEY = "carstair_session_v1";
-const TENANTS_KEY = "carstair_tenants_v1";
+const STORAGE_KEY = "castair_session_v1";
+const TENANTS_KEY = "castair_tenants_v1";
 
 function uid(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -77,6 +77,6 @@ export function clearSession(): void {
 
 export function demoLogin(): Session {
   const tenant = createTenant("Demo MRO", "demo-mro");
-  const user = provisionUser("inspector@demo-mro.carstair.local", "Demo Inspector", "inspector", tenant);
+  const user = provisionUser("inspector@demo-mro.castair.local", "Demo Inspector", "inspector", tenant);
   return createSession(user, tenant);
 }

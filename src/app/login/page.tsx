@@ -1,57 +1,95 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { demoLogin, createTenant, provisionUser, createSession } from "@/lib/auth/store";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [org, setOrg] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  async function submit(e: React.FormEvent) {
+  function goDemo() {
+    setBusy(true);
+    demoLogin();
+    router.push("/app");
+  }
+
+  function goProvision(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) {
-      setError(data.error || "Login failed");
-      return;
-    }
+    if (!org.trim() || !name.trim() || !email.trim()) return;
+    setBusy(true);
+    const tenant = createTenant(org.trim());
+    const user = provisionUser(email.trim(), name.trim(), "admin", tenant);
+    createSession(user, tenant);
     router.push("/app");
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-5">
-      <div className="w-full max-w-sm card p-8 rise">
-        <Link href="/" className="text-xs tracking-[0.16em] font-semibold">CARSTAIR</Link>
-        <h1 className="text-2xl font-light mt-6">Log in</h1>
-        <form onSubmit={submit} className="mt-6 space-y-3">
-          <div>
-            <label className="text-[11px] text-zinc-500">Email or username</label>
-            <input className="mt-1 w-full px-3 py-2.5 text-sm" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <main className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md animate-fade-up">
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-3">
+            <Image src="/logo.svg" alt="Castair" width={40} height={40} />
           </div>
-          <div>
-            <label className="text-[11px] text-zinc-500">Password</label>
-            <input type="password" className="mt-1 w-full px-3 py-2.5 text-sm" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </div>
-          {error && <p className="text-xs text-red-400">{error}</p>}
-          <button type="submit" disabled={loading} className="btn btn-primary w-full py-2.5">
-            {loading ? "…" : "Log in"}
+          <div className="font-semibold text-xl tracking-tight mb-2">Castair</div>
+          <p className="text-sm text-[var(--muted)]">
+            Provision a tenant or jump into the offline demo.
+          </p>
+        </div>
+
+        <div className="castair-card p-6 space-y-6">
+          <button
+            type="button"
+            onClick={goDemo}
+            disabled={busy}
+            className="w-full bg-[var(--accent)] text-[var(--background)] py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            Continue with demo tenant (offline)
           </button>
-        </form>
-        <p className="text-xs text-zinc-600 mt-5 text-center">
-          No account? <Link href="/signup" className="text-zinc-300">Sign up</Link>
-        </p>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[var(--border)]" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-[var(--surface)] px-2 text-[var(--muted)]">or provision</span>
+            </div>
+          </div>
+
+          <form onSubmit={goProvision} className="space-y-3">
+            <input
+              className="w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-[var(--highlight)]"
+              placeholder="Organisation name"
+              value={org}
+              onChange={(e) => setOrg(e.target.value)}
+            />
+            <input
+              className="w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-[var(--highlight)]"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              type="email"
+              className="w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-1 focus:ring-[var(--highlight)]"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <button
+              type="submit"
+              disabled={busy}
+              className="w-full border border-[var(--border)] py-2.5 rounded-lg text-sm font-medium hover:bg-[var(--accent-soft)] transition-colors disabled:opacity-50"
+            >
+              Create tenant & enter
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
