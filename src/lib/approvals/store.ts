@@ -5,10 +5,11 @@ export interface ApprovalItem {
   agentId: string;
   payload: unknown;
   status: "pending" | "approved" | "rejected";
+  requiresCertifyingStaff?: boolean;
   createdAt: string;
 }
 
-const KEY = (tenantId: string) => `castair_${tenantId}_approvals`;
+const KEY = (tenantId: string) => `castair_${tenantId}_approvals_v2`;
 
 function load(tenantId: string): ApprovalItem[] {
   if (typeof window === "undefined") return [];

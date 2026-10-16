@@ -1,5 +1,5 @@
-import type { AdSbRecord, Aircraft } from "../cmms/types";
-import { localCmms } from "../cmms/local-store";
+import type { AdSbRecord, Aircraft } from "../cmms/models";
+import { repo } from "../cmms/repo";
 
 export interface AdSbFinding {
   record: AdSbRecord;
@@ -8,11 +8,13 @@ export interface AdSbFinding {
   rationale: string;
   confidence: number;
   evidence: string[];
+  dueContext?: string;
 }
 
-export function runAdSbMonitor(tenantId: string): AdSbFinding[] {
-  const aircraft = localCmms.listAircraft(tenantId);
-  const records = localCmms.listAdSb(tenantId);
+export async function runAdSbMonitor(tenantId: string): Promise<AdSbFinding[]> {
+  await repo.seedDemo(tenantId);
+  const aircraft = await repo.listAircraft(tenantId);
+  const records = await repo.listAdSb(tenantId);
   const results: AdSbFinding[] = [];
 
   for (const rec of records) {
@@ -26,6 +28,7 @@ export function runAdSbMonitor(tenantId: string): AdSbFinding[] {
       let recommendation: AdSbFinding["recommendation"] = "review";
       let rationale = "Manual review required.";
       let confidence = 55;
+      let dueContext: string | undefined;
 
       if (!typeMatch) {
         recommendation = "not_applicable";
@@ -39,9 +42,12 @@ export function runAdSbMonitor(tenantId: string): AdSbFinding[] {
         recommendation = "embody";
         rationale = "Open Airworthiness Directive on applicable type — prioritise embodiment.";
         confidence = 85;
-      } else if (rec.type === "SB" && rec.status === "open") {
+        if (rec.dueHours != null && ac.flightHours != null) {
+          dueContext = `Due within ${rec.dueHours} FH (aircraft at ${ac.flightHours} FH)`;
+        }
+      } else if ((rec.type === "SB" || rec.type === "EO") && rec.status === "open") {
         recommendation = "review";
-        rationale = "Open Service Bulletin — evaluate operational benefit and downtime.";
+        rationale = `Open ${rec.type} — evaluate operational benefit and downtime.`;
         confidence = 70;
       }
 
@@ -51,11 +57,13 @@ export function runAdSbMonitor(tenantId: string): AdSbFinding[] {
         recommendation,
         rationale,
         confidence,
+        dueContext,
         evidence: [
-          `AD/SB ${rec.number}`,
+          `${rec.type} ${rec.number}`,
           `Applicability: ${rec.applicability}`,
-          `Aircraft: ${ac.registration} (${ac.type})`,
-          `Current status: ${rec.status}`,
+          `Aircraft: ${ac.registration} (${ac.type}) SN=${ac.serialNumber ?? "n/a"}`,
+          `FH=${ac.flightHours ?? "n/a"} CY=${ac.cycles ?? "n/a"}`,
+          `Status: ${rec.status}`,
         ],
       });
     }
