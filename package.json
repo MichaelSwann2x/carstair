@@ -1,8 +1,8 @@
 {
   "name": "carstair",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "private": true,
-  "description": "Castair by Carstair — Aircraft Quality Control & RTS Inspector Platform",
+  "description": "Castair — online-first Aircraft QC & RTS platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,7 +10,8 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "pages:build": "npx @cloudflare/next-on-pages@1",
-    "pages:deploy": "npx wrangler pages deploy .vercel/output/static --project-name=carstair"
+    "pages:deploy": "npx wrangler pages deploy .vercel/output/static --project-name=carstair",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "next": "15.1.0",
@@ -30,6 +31,7 @@
     "eslint": "^9.0.0",
     "eslint-config-next": "15.1.0",
     "@cloudflare/next-on-pages": "^1.13.0",
-    "wrangler": "^3.80.0"
+    "wrangler": "^3.80.0",
+    "@playwright/test": "^1.48.0"
   }
 }

@@ -4,9 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { getSession, clearSession } from "@/lib/auth/store";
-import type { Session } from "@/lib/auth/types";
-import { repo } from "@/lib/cmms/repo";
+import { api, setToken, getToken } from "@/lib/api/client";
 import { CommandPalette } from "@/components/CommandPalette";
 
 const nav = [
@@ -19,27 +17,54 @@ const nav = [
   { href: "/app/approvals", label: "Approvals" },
   { href: "/app/rts", label: "RTS package" },
   { href: "/app/audit", label: "Audit log" },
-  { href: "/app/connectors", label: "Connectors" },
   { href: "/app/exports", label: "Exports" },
 ];
+
+type Me = {
+  user: { id: string; name: string; role: string; email: string };
+  tenant: { id: string; name: string; isDemo: boolean };
+};
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [session, setSession] = useState<Session | null | undefined>(undefined);
+  const [me, setMe] = useState<Me | null | undefined>(undefined);
+  const [online, setOnline] = useState(true);
+  const [forceOffline, setForceOffline] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [compact, setCompact] = useState(false);
 
   useEffect(() => {
-    const s = getSession();
-    if (!s) {
+    const token = getToken();
+    if (!token) {
       router.replace("/login");
-      setSession(null);
+      setMe(null);
       return;
     }
-    repo.seedDemo(s.tenant.id).then(() => setSession(s));
+    api<Me>("/api/v1/auth/me").then((res) => {
+      if (!res.ok || !res.data) {
+        setToken(null);
+        router.replace("/login");
+        setMe(null);
+        return;
+      }
+      setMe(res.data);
+    });
   }, [router]);
+
+  useEffect(() => {
+    function sync() {
+      setOnline(navigator.onLine && !forceOffline);
+    }
+    sync();
+    window.addEventListener("online", sync);
+    window.addEventListener("offline", sync);
+    return () => {
+      window.removeEventListener("online", sync);
+      window.removeEventListener("offline", sync);
+    };
+  }, [forceOffline]);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -58,22 +83,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
 
-  if (session === undefined) {
+  if (me === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-[var(--muted)] text-sm" role="status">
-        <span className="skeleton h-4 w-32 inline-block" aria-hidden />
-        <span className="sr-only">Loading session</span>
+      <div className="min-h-screen flex items-center justify-center text-sm text-[var(--muted)]" role="status">
+        <span className="skeleton h-4 w-28" />
+        <span className="sr-only">Loading</span>
       </div>
     );
   }
 
-  if (!session) {
+  if (!me) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-3 text-sm">
-        <p className="text-[var(--muted)]">No active session.</p>
-        <Link href="/login" className="font-medium underline">
-          Go to sign in
-        </Link>
+      <div className="min-h-screen flex items-center justify-center">
+        <Link href="/login" className="underline text-sm">Sign in</Link>
       </div>
     );
   }
@@ -82,9 +104,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex items-center gap-2 px-2 mb-1">
         <Image src="/logo.svg" alt="" width={22} height={22} />
-        <span className="font-semibold tracking-tight text-black">Castair</span>
+        <span className="font-semibold tracking-tight">Castair</span>
       </div>
-      <div className="text-[11px] text-[var(--muted)] px-2 mb-4 truncate">{session.tenant.name}</div>
+      <div className="text-[11px] text-[var(--muted)] px-2 truncate">{me.tenant.name}</div>
+      {me.tenant.isDemo && (
+        <div className="mx-2 mt-1 mb-3 text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 inline-block">
+          Demo
+        </div>
+      )}
       <nav className="flex flex-col gap-0.5 flex-1" aria-label="App">
         {nav.map((item) => {
           const active = pathname === item.href;
@@ -93,10 +120,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               key={item.href}
               href={item.href}
               onClick={closeDrawer}
-              className={`px-2 py-1.5 rounded-md text-sm transition-colors ${
-                active
-                  ? "bg-[var(--accent-soft)] text-black font-medium"
-                  : "text-[var(--muted)] hover:text-black hover:bg-[var(--accent-soft)]"
+              className={`px-2 py-1.5 rounded-md text-sm ${
+                active ? "bg-[var(--accent-soft)] font-medium text-black" : "text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-black"
               }`}
               aria-current={active ? "page" : undefined}
             >
@@ -105,32 +130,28 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           );
         })}
       </nav>
-      <div className="border-t border-[var(--border)] pt-3 mt-3 space-y-1">
-        <div className="text-xs text-[var(--muted)] px-2 truncate">{session.user.name}</div>
-        <div className="text-[10px] text-[var(--muted)] px-2 uppercase tracking-wide">{session.user.role}</div>
-        <button
-          type="button"
-          onClick={() => setCompact((c) => !c)}
-          className="text-xs text-[var(--muted)] hover:text-black px-2 block"
-        >
+      <div className="border-t border-[var(--border)] pt-3 mt-3 space-y-1 text-xs text-[var(--muted)]">
+        <div className="px-2 truncate text-black">{me.user.name}</div>
+        <div className="px-2 uppercase tracking-wide">{me.user.role.replace("_", " ")}</div>
+        <button type="button" className="px-2 block hover:text-black" onClick={() => setCompact((c) => !c)}>
           Density: {compact ? "compact" : "comfortable"}
         </button>
-        <button
-          type="button"
-          onClick={() => setPaletteOpen(true)}
-          className="text-xs text-[var(--muted)] hover:text-black px-2 block"
-        >
+        <button type="button" className="px-2 block hover:text-black" onClick={() => setForceOffline((v) => !v)}>
+          {forceOffline ? "Force offline: on" : "Force offline: off"}
+        </button>
+        <button type="button" className="px-2 block hover:text-black" onClick={() => setPaletteOpen(true)}>
           Search (⌘K)
         </button>
         <button
           type="button"
-          onClick={() => {
-            clearSession();
+          className="px-2 block hover:text-black pt-1"
+          onClick={async () => {
+            await api("/api/v1/auth/logout", { method: "POST" });
+            setToken(null);
             router.push("/login");
           }}
-          className="text-xs text-[var(--muted)] hover:text-black px-2 pt-1"
         >
-          Sign out
+          {me.tenant.isDemo ? "Exit demo / Sign in" : "Sign out"}
         </button>
       </div>
     </>
@@ -138,44 +159,29 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex bg-[var(--background)] text-black">
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-52 border-r border-[var(--border)] bg-white p-3 flex-col shrink-0">
-        {navContent}
-      </aside>
-
-      {/* Mobile drawer */}
+      <aside className="hidden md:flex w-52 border-r border-[var(--border)] bg-white p-3 flex-col shrink-0">{navContent}</aside>
       {drawerOpen && (
-        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true" aria-label="Navigation">
-          <button
-            type="button"
-            className="absolute inset-0 bg-black/30"
-            aria-label="Close menu"
-            onClick={closeDrawer}
-          />
-          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-white p-3 flex flex-col shadow-lg">
-            {navContent}
-          </aside>
+        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
+          <button type="button" className="absolute inset-0 bg-black/30" aria-label="Close" onClick={closeDrawer} />
+          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-white p-3 flex flex-col shadow-lg">{navContent}</aside>
         </div>
       )}
-
       <div className="flex-1 flex flex-col min-w-0 overflow-auto">
+        {!online && (
+          <div className="bg-amber-100 text-amber-950 text-xs px-4 py-2 border-b border-amber-200" role="status">
+            Offline — reads use cache; writes queue until reconnect. Conflict review required for findings and signatures.
+          </div>
+        )}
         <div className="md:hidden border-b border-[var(--border)] bg-white px-3 py-2 flex items-center gap-2">
-          <button
-            type="button"
-            className="text-sm font-medium px-2 py-1 rounded border border-[var(--border)]"
-            onClick={() => setDrawerOpen(true)}
-            aria-label="Open menu"
-          >
+          <button type="button" className="text-sm px-2 py-1 rounded border border-[var(--border)]" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
             Menu
           </button>
           <span className="font-semibold text-sm">Castair</span>
+          {me.tenant.isDemo && <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 rounded">DEMO</span>}
         </div>
         {children}
       </div>
-
-      {paletteOpen && (
-        <CommandPalette tenantId={session.tenant.id} onClose={() => setPaletteOpen(false)} />
-      )}
+      {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} />}
     </div>
   );
 }
