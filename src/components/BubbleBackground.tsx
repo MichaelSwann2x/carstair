@@ -1,1 +1,3 @@
-export { default } from "./Ambient";
+export default function BubbleBackground() {
+  return null;
+}

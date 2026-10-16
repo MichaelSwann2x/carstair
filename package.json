@@ -1,6 +1,6 @@
 {
   "name": "carstair",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Castair by Carstair — Aircraft Quality Control & RTS Inspector Platform",
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:build": "npx @cloudflare/next-on-pages@1",
     "preview": "npm run pages:build && wrangler pages dev .vercel/output/static",
     "deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static --project-name=carstair"
   },

@@ -1,4 +1,4 @@
 import { redirect } from "next/navigation";
-export default function PricingRemoved() {
+export default function Page() {
   redirect("/");
 }
