@@ -1,7 +1,7 @@
 import type { Session, Tenant, User, Role } from "./types";
 
-const STORAGE_KEY = "castair_session_v1";
-const TENANTS_KEY = "castair_tenants_v1";
+const STORAGE_KEY = "castair_session_v2";
+const TENANTS_KEY = "castair_tenants_v2";
 
 function uid(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -75,8 +75,29 @@ export function clearSession(): void {
   if (typeof window !== "undefined") localStorage.removeItem(STORAGE_KEY);
 }
 
-export function demoLogin(): Session {
+/** Demo: inspector by default; pass role for certifying staff / admin demos */
+export function demoLogin(role: Role = "inspector"): Session {
   const tenant = createTenant("Demo MRO", "demo-mro");
-  const user = provisionUser("inspector@demo-mro.castair.local", "Demo Inspector", "inspector", tenant);
+  const labels: Record<Role, string> = {
+    inspector: "Demo Inspector",
+    rts_authority: "Demo Certifying Staff",
+    camo_engineer: "Demo CAMO Engineer",
+    admin: "Demo Admin",
+    viewer: "Demo Viewer",
+  };
+  const user = provisionUser(
+    `${role}@demo-mro.castair.local`,
+    labels[role],
+    role,
+    tenant
+  );
   return createSession(user, tenant);
+}
+
+export function canApproveRTS(role: Role): boolean {
+  return role === "rts_authority" || role === "admin";
+}
+
+export function canProposeFindings(role: Role): boolean {
+  return role === "inspector" || role === "camo_engineer" || role === "admin" || role === "rts_authority";
 }
