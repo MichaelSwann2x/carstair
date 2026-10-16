@@ -1,7 +1,4 @@
 name = "carstair"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
-
-# This project deploys via Cloudflare Pages + @cloudflare/next-on-pages.
-# Do NOT use `wrangler deploy` (Workers entrypoint).
-# Use: npx wrangler pages deploy .vercel/output/static --project-name=carstair
+pages_build_output_dir = ".vercel/output/static"
