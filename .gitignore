@@ -1,9 +1,12 @@
 node_modules
 .next
-out
 .vercel
 .wrangler
+out
+dist
 .env
 .env.local
 *.log
 .DS_Store
+bun.lock
+package-lock.json
