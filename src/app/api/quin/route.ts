@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-export async function POST() {
-  return NextResponse.json({ error: "Removed" }, { status: 410 });
-}
+export const runtime = "edge";
 export async function GET() {
-  return NextResponse.json({ error: "Removed" }, { status: 410 });
+  return NextResponse.json({ deprecated: true });
 }
