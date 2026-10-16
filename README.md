@@ -1,33 +1,28 @@
-# CARSTAIR
+# Carstair
 
-## Cloudflare Pages / Workers settings (required)
+**Aircraft Quality Control · Return-to-Service · Aviation Safety Inspector**
 
-Your last deploy failed because **only** `npx wrangler deploy` ran — no OpenNext build, so `.open-next` was missing.
+Offline-first agentic platform. Human-in-the-loop on every RTS decision.
 
-### Option A (recommended) — two steps
+## Cloudflare Pages deploy
 
-| Field | Value |
-|-------|--------|
-| **Build command** | `npx opennextjs-cloudflare build` |
-| **Deploy command** | `npx wrangler deploy` |
-| **Root directory** | `/` (repo root) |
+| Setting | Value |
+|--------|--------|
+| Build command | `npm run build` |
+| Output directory | `out` |
+| Node version | 20 or 22 |
 
-### Option B — single deploy command
+Or connect this repo in the Cloudflare dashboard with those settings.
 
-| Field | Value |
-|-------|--------|
-| **Build command** | *(leave empty or `echo skip`)* |
-| **Deploy command** | `npx opennextjs-cloudflare build && npx wrangler deploy` |
+## Local
 
-**Do not** set Build command to `npm run build` only if Deploy is plain `wrangler deploy` — that produces `.next` but **not** `.open-next`.
-
-`package.json` keeps `"build": "next build"` so OpenNext can call it internally without recursion.
-
-## Env vars
-
+```bash
+npm install
+npm run dev
 ```
-AUTH_SECRET=
-NEXT_PUBLIC_APP_URL=https://your-domain.com
-REDDIT_CLIENT_ID=
-REDDIT_CLIENT_SECRET=
-```
+
+Open http://localhost:3000 → Enter Carstair → demo tenant.
+
+## Stack
+
+Next.js 15 static export · Tailwind · client-side tenant sandbox · Castair-native CMMS + connectors · AD/SB, Closed-Loop Visual, Explainable Airworthiness agents.

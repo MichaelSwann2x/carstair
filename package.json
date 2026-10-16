@@ -1,39 +1,28 @@
 {
   "name": "carstair",
-  "version": "3.1.0",
+  "version": "1.0.0",
   "private": true,
+  "description": "Carstair — Aircraft Quality Control & Return-to-Service Inspector Platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "opennext": "opennextjs-cloudflare build",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && wrangler deploy",
-    "cf:build": "opennextjs-cloudflare build",
-    "cf:deploy": "opennextjs-cloudflare build && wrangler deploy"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "1.20.10",
-    "next": "15.3.3",
+    "next": "15.1.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "lucide-react": "0.424.0",
-    "clsx": "2.1.1",
-    "tailwind-merge": "2.6.1",
-    "jose": "5.10.0",
-    "zod": "3.25.76"
+    "clsx": "^2.1.1",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
-    "@types/node": "20.19.43",
-    "@types/react": "19.0.10",
-    "@types/react-dom": "19.0.4",
-    "typescript": "5.8.3",
-    "tailwindcss": "3.4.17",
-    "postcss": "8.5.3",
-    "autoprefixer": "10.4.21",
-    "eslint": "9.22.0",
-    "eslint-config-next": "15.3.3",
-    "wrangler": "4.149.0"
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.6.0"
   }
 }
