@@ -19,22 +19,34 @@ const nav = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
   useEffect(() => {
     const s = getSession();
     if (!s) {
       router.replace("/login");
+      setSession(null);
       return;
     }
-    setSession(s);
     localCmms.seedDemo(s.tenant.id);
+    setSession(s);
   }, [router]);
+
+  if (session === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-[var(--muted)] text-sm">
+        Loading…
+      </div>
+    );
+  }
 
   if (!session) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-[var(--muted)] text-sm">
-        Loading tenant…
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3 text-sm">
+        <p className="text-[var(--muted)]">No active session.</p>
+        <Link href="/login" className="text-[var(--highlight)] font-medium hover:underline">
+          Go to sign in
+        </Link>
       </div>
     );
   }
@@ -65,21 +77,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
-        <div className="border-t border-[var(--border)] pt-3 mt-3">
-          <div className="text-xs text-[var(--muted)] px-2 mb-1 truncate">{session.user.name}</div>
+        <div className="border-t border-[var(--border)] pt-3 mt-3 space-y-1">
+          <div className="text-xs text-[var(--muted)] px-2 truncate">{session.user.name}</div>
+          <div className="text-[10px] text-[var(--muted)] px-2 uppercase tracking-wide">{session.user.role}</div>
           <button
             type="button"
             onClick={() => {
               clearSession();
               router.push("/login");
             }}
-            className="text-xs text-[var(--muted)] hover:text-[var(--foreground)] px-2"
+            className="text-xs text-[var(--muted)] hover:text-[var(--foreground)] px-2 pt-1"
           >
             Sign out
           </button>
         </div>
       </aside>
-      <div className="flex-1 flex flex-col min-w-0">{children}</div>
+      <div className="flex-1 flex flex-col min-w-0 overflow-auto">{children}</div>
     </div>
   );
 }
