@@ -1,36 +1,34 @@
 # Cloudflare Pages — Castair / Carstair
 
-## Recommended settings
+## Build succeeded path (use this)
 
 | Setting | Value |
 |--------|--------|
 | Production branch | `main` |
-| Framework preset | Next.js (or None) |
-| Build command | `npx @cloudflare/next-on-pages@1` |
-| Build output directory | `.vercel/output/static` |
+| **Build command** | `npx @cloudflare/next-on-pages@1` |
+| **Build output directory** | `.vercel/output/static` |
 | Root directory | `/` (empty) |
 | Node version | `20` |
+| **Deploy command** | *(leave empty)* — Pages auto-deploys the output directory |
 
-## Alternative (plain Next build)
+## Do not use
 
-If you only need a Node-compatible deploy or are testing compile:
+- Deploy command: `npx wrangler deploy` — that looks for `.open-next/worker.js` (Workers/OpenNext). This app is **Pages + next-on-pages**.
+- If you must set a deploy command, use:
 
+```bash
+npx wrangler pages deploy .vercel/output/static --project-name=carstair
 ```
-npm run build
-```
 
-That is `next build` and now succeeds (invalid `experimental.runtime` removed).
+## Why the last deploy failed
 
-## Why the previous build failed
+`next-on-pages` finished successfully and wrote assets to `.vercel/output/static`.  
+Then the project ran `npx wrangler deploy`, which expects a Workers entry at `.open-next/worker.js`. That file does not exist for this stack.
 
-1. `next.config.ts` had `experimental.runtime: "edge"` which is not a valid Next 15 config key.
-2. An unused `@ts-expect-error` caused `tsc` to fail the build.
+## Fix in Cloudflare dashboard
 
-Both are fixed on `main` of this repo.
-
-## After deploy
-
-- Landing: `/`
-- Login / demo: `/login`
-- Product: `/app`
-- Health API: `/api/health`
+1. Open the Pages project → **Settings** → **Builds & deployments**
+2. **Build command:** `npx @cloudflare/next-on-pages@1`
+3. **Build output directory:** `.vercel/output/static`
+4. **Deploy command:** clear it (empty)
+5. Save → Retry deployment
