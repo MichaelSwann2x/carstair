@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
 export const runtime = "edge";
 export async function GET() {
-  return NextResponse.redirect(new URL("/", process.env.CF_PAGES_URL || "http://localhost:3000"));
+  return NextResponse.json({ error: "Removed" }, { status: 410 });
 }
