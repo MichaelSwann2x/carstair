@@ -1,6 +1,11 @@
 import { store, uid } from "./store";
 import type { Aircraft, TaskCard, WorkPackage, AdSbRecord, MelItem, ComponentLife } from "./types";
 
+export function ensureDemoSeeded(tenantId: string) {
+  if (store.isDemoSeeded(tenantId)) return;
+  seedDemoTenant(tenantId);
+}
+
 export function seedDemoTenant(tenantId: string) {
   if (store.isDemoSeeded(tenantId)) return;
   const now = new Date().toISOString();

@@ -1,41 +1,59 @@
 "use client";
 
+/** Navy pixel-art sky: clouds + planes (Kimpton restraint, aviation theme) */
 export function HeroSky() {
+  const W = 48;
+  const H = 22;
+  // Procedural soft pixel field
+  const cells: { x: number; y: number; c: string }[] = [];
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const n = (Math.sin(x * 0.4 + y * 0.7) + Math.cos(x * 0.2 - y * 0.3)) * 0.5;
+      let c = "#0b1f3a";
+      if (y < 8 && n > 0.3) c = "#1e3a5f";
+      if (y < 6 && n > 0.55) c = "#2d4a6f";
+      if (y < 5 && n > 0.75) c = "#3d5a80";
+      // cloud bands
+      if (y >= 4 && y <= 7 && ((x > 6 && x < 14) || (x > 22 && x < 32) || (x > 36 && x < 44))) {
+        if ((x + y) % 3 !== 0) c = "#4a6fa5";
+        if ((x + y) % 5 === 0) c = "#5c7fb5";
+      }
+      if (y >= 8 && y <= 10 && x > 16 && x < 26 && (x + y) % 2 === 0) c = "#3d5a80";
+      cells.push({ x, y, c });
+    }
+  }
+
+  // Pixel plane sprites (drawn as rects on top)
+  const plane = (ox: number, oy: number, color: string) =>
+    [
+      [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1],
+      [5, 0], [2, 0], [2, 2], [1, 1],
+    ].map(([px, py], i) => (
+      <rect key={`${ox}-${oy}-${i}`} x={(ox + px) * 12} y={(oy + py) * 12} width={12} height={12} fill={color} />
+    ));
+
   return (
     <div
-      className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden border border-zinc-200/60 bg-gradient-to-b from-[#e8eef5] via-[#f0f4f8] to-[#f7f7f8] shadow-[0_20px_60px_-20px_rgba(15,23,42,0.12)]"
+      className="relative w-full max-w-[920px] mx-auto aspect-[2.2/1] rounded-2xl overflow-hidden border border-[#1e3a5f]/40 shadow-[0_24px_80px_-24px_rgba(11,31,58,0.35)]"
       role="img"
-      aria-label="Soft illustration of aircraft among clouds"
+      aria-label="Pixel illustration of aircraft among clouds"
     >
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 540" preserveAspectRatio="xMidYMid slice" aria-hidden>
-        <defs>
-          <radialGradient id="g1" cx="50%" cy="40%" r="50%">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#c5d4e8" stopOpacity="0" />
-          </radialGradient>
-          <filter id="soft">
-            <feGaussianBlur stdDeviation="8" />
-          </filter>
-        </defs>
-        <ellipse className="cloud-a" cx="200" cy="120" rx="140" ry="50" fill="url(#g1)" filter="url(#soft)" />
-        <ellipse className="cloud-b" cx="480" cy="90" rx="160" ry="55" fill="url(#g1)" filter="url(#soft)" />
-        <ellipse className="cloud-c" cx="820" cy="130" rx="180" ry="60" fill="url(#g1)" filter="url(#soft)" />
-        <ellipse className="cloud-a" cx="1000" cy="100" rx="120" ry="45" fill="url(#g1)" filter="url(#soft)" />
-        <ellipse className="cloud-b" cx="350" cy="200" rx="100" ry="40" fill="url(#g1)" filter="url(#soft)" opacity="0.7" />
-        <ellipse className="cloud-c" cx="700" cy="220" rx="130" ry="42" fill="url(#g1)" filter="url(#soft)" opacity="0.65" />
-        {Array.from({ length: 80 }).map((_, i) => {
-          const x = (i * 97) % 1200;
-          const y = 40 + ((i * 53) % 200);
-          const r = 0.8 + (i % 3) * 0.4;
-          return <circle key={i} cx={x} cy={y} r={r} fill="#94a3b8" opacity={0.15 + (i % 5) * 0.05} />;
-        })}
-        <g className="plane-1">
-          <path d="M80 280 L160 268 L280 272 L300 265 L310 272 L290 278 L200 282 L160 295 L145 282 Z" fill="#3f3f46" opacity="0.55" />
-        </g>
-        <g className="plane-2">
-          <path d="M900 320 L980 308 L1080 314 L1105 306 L1115 314 L1090 320 L1000 324 L960 338 L945 324 Z" fill="#52525b" opacity="0.4" />
-        </g>
-        <path d="M0 420 Q300 400 600 415 T1200 405 L1200 540 L0 540 Z" fill="#e4e4e7" opacity="0.5" />
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox={`0 0 ${W * 12} ${H * 12}`}
+        preserveAspectRatio="xMidYMid slice"
+        shapeRendering="crispEdges"
+        aria-hidden
+      >
+        {cells.map((p, i) => (
+          <rect key={i} x={p.x * 12} y={p.y * 12} width={12} height={12} fill={p.c} />
+        ))}
+        <g className="plane-1">{plane(2, 12, "#e8eef5")}</g>
+        <g className="plane-2">{plane(30, 15, "#c5d4e8")}</g>
+        {/* ground band */}
+        {Array.from({ length: W }).map((_, x) => (
+          <rect key={`g${x}`} x={x * 12} y={(H - 2) * 12} width={12} height={24} fill="#071528" />
+        ))}
       </svg>
     </div>
   );

@@ -1,11 +1,14 @@
-/** Online-first API client. Token from localStorage for SPA calls. */
-
 const TOKEN_KEY = "castair_api_token";
 
 export function setToken(token: string | null) {
   if (typeof window === "undefined") return;
-  if (token) localStorage.setItem(TOKEN_KEY, token);
-  else localStorage.removeItem(TOKEN_KEY);
+  if (token) {
+    localStorage.setItem(TOKEN_KEY, token);
+    document.cookie = `castair_token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
+  } else {
+    localStorage.removeItem(TOKEN_KEY);
+    document.cookie = "castair_token=; path=/; max-age=0";
+  }
 }
 
 export function getToken(): string | null {
@@ -18,17 +21,21 @@ export async function api<T = unknown>(
   init: RequestInit = {}
 ): Promise<{ ok: boolean; status: number; data?: T; error?: string }> {
   const token = getToken();
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...(init.headers || {}),
+    ...(init.headers as Record<string, string>),
   };
-  if (token) (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+  if (token) headers.Authorization = `Bearer ${token}`;
 
   try {
     const res = await fetch(path, { ...init, headers, credentials: "include" });
     const json = await res.json().catch(() => ({}));
     if (!res.ok) {
-      return { ok: false, status: res.status, error: (json as { error?: string }).error || res.statusText };
+      return {
+        ok: false,
+        status: res.status,
+        error: (json as { error?: string }).error || res.statusText,
+      };
     }
     return { ok: true, status: res.status, data: json as T };
   } catch {

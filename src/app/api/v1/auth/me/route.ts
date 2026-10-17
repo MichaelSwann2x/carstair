@@ -5,7 +5,9 @@ export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
   const session = requireSession(req);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   return NextResponse.json({
     user: session.user,
     tenant: session.tenant,

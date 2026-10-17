@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { store } from "@/lib/server/store";
-import { writeAudit } from "@/lib/server/audit";
+import { uid } from "@/lib/server/store";
+import { mintSessionToken } from "@/lib/server/session-token";
+import type { Tenant, User } from "@/lib/server/types";
 import { z } from "zod";
 
 export const runtime = "edge";
@@ -13,22 +14,38 @@ const Body = z.object({
 });
 
 export async function POST(req: NextRequest) {
-  const body = Body.parse(await req.json());
-  const tenant = store.createTenant(body.org, false);
-  const user = store.createUser({
-    tenantId: tenant.id,
-    email: body.email,
-    name: body.name,
-    role: body.role,
-  });
-  const token = store.createSession(user.id, tenant.id);
-  await writeAudit(tenant.id, user, "auth.provision", "tenant", tenant.id, `Provisioned ${tenant.name}`, {});
-  const res = NextResponse.json({ token, user, tenant, demo: false });
-  res.cookies.set("castair_token", token, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-  });
-  return res;
+  try {
+    const body = Body.parse(await req.json());
+    const tenantId = uid();
+    const tenant: Tenant = {
+      id: tenantId,
+      name: body.org,
+      slug: body.org.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "org",
+      isDemo: false,
+      createdAt: new Date().toISOString(),
+    };
+    const user: User = {
+      id: uid(),
+      tenantId,
+      email: body.email,
+      name: body.name,
+      role: body.role,
+      createdAt: new Date().toISOString(),
+    };
+    const token = mintSessionToken(user, tenant);
+    const res = NextResponse.json({ token, user, tenant, demo: false });
+    res.cookies.set("castair_token", token, {
+      httpOnly: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+      secure: true,
+    });
+    return res;
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Provision failed" },
+      { status: 400 }
+    );
+  }
 }
