@@ -1,14 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
 import { api, setToken } from "@/lib/api/client";
 
 type Role = "inspector" | "certifying_staff" | "admin" | "viewer";
 
-export default function LoginPage() {
+function LoginInner() {
   const router = useRouter();
+  const params = useSearchParams();
+  const mode = params.get("mode");
   const [org, setOrg] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -57,30 +59,34 @@ export default function LoginPage() {
             <Image src="/logo.svg" alt="Castair logo" width={40} height={40} />
           </div>
           <h1 className="font-semibold text-xl tracking-tight mb-2 text-black">Castair</h1>
-          <p className="text-sm text-[var(--muted)]">Online-first aircraft QC & RTS. Demo is isolated sample data.</p>
+          <p className="text-sm text-[var(--muted)]">
+            {mode === "provision" ? "Provision your organisation." : "Isolated demo or live tenant."}
+          </p>
         </div>
 
         <div className="castair-card p-6 space-y-6 bg-white">
-          <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900" role="note">
-            <strong>Demo mode</strong> uses isolated sample data and does not write to real tenants.
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs text-[var(--muted)] font-medium">Enter demo as</p>
-            <div className="grid grid-cols-2 gap-2">
-              <button type="button" disabled={busy} onClick={() => goDemo("inspector")} className="border border-[var(--border)] py-2 rounded-lg text-sm font-medium hover:bg-[var(--accent-soft)] disabled:opacity-50">
-                Inspector
-              </button>
-              <button type="button" disabled={busy} onClick={() => goDemo("certifying_staff")} className="border border-[var(--border)] py-2 rounded-lg text-sm font-medium hover:bg-[var(--accent-soft)] disabled:opacity-50">
-                Certifying staff
-              </button>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[var(--border)]" /></div>
-            <div className="relative flex justify-center text-xs"><span className="bg-white px-2 text-[var(--muted)]">or provision live tenant</span></div>
-          </div>
+          {mode !== "provision" && (
+            <>
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900" role="note">
+                <strong>Demo</strong> is isolated sample data and does not write to real tenants.
+              </div>
+              <div className="space-y-2">
+                <p className="text-xs text-[var(--muted)] font-medium">Enter demo as</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button type="button" disabled={busy} onClick={() => goDemo("inspector")} className="border border-[var(--border)] py-2 rounded-lg text-sm font-medium hover:bg-[var(--accent-soft)] disabled:opacity-50">
+                    Inspector
+                  </button>
+                  <button type="button" disabled={busy} onClick={() => goDemo("certifying_staff")} className="border border-[var(--border)] py-2 rounded-lg text-sm font-medium hover:bg-[var(--accent-soft)] disabled:opacity-50">
+                    Certifying staff
+                  </button>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-[var(--border)]" /></div>
+                <div className="relative flex justify-center text-xs"><span className="bg-white px-2 text-[var(--muted)]">or provision</span></div>
+              </div>
+            </>
+          )}
 
           <form onSubmit={goProvision} className="space-y-3" aria-label="Provision organisation">
             <div>
@@ -112,5 +118,13 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-zinc-500">Loading…</div>}>
+      <LoginInner />
+    </Suspense>
   );
 }

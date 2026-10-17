@@ -42,11 +42,33 @@ export default function TaskCardsPage() {
     load();
   }
 
+  async function attach(id: string, file: File) {
+    const buf = await file.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    const dataBase64 = btoa(binary);
+    const res = await api("/api/v1/evidence", {
+      method: "POST",
+      body: JSON.stringify({
+        taskCardId: id,
+        filename: file.name,
+        contentType: file.type || "application/octet-stream",
+        dataBase64,
+      }),
+    });
+    if (!res.ok) {
+      toast(res.error || "Upload failed", "error");
+      return;
+    }
+    toast(`Attached ${file.name}`, "success");
+  }
+
   return (
     <>
       <header className="border-b border-[var(--border)] px-6 py-3 bg-white">
         <h1 className="font-medium">Task cards</h1>
-        <p className="text-xs text-[var(--muted)]">Multi-step · RII gates · server-enforced dual control</p>
+        <p className="text-xs text-[var(--muted)]">Evidence · dual signatures · server-enforced RII</p>
       </header>
       <div className="p-6 space-y-3 animate-fade-up">
         {rows === null && <div className="skeleton h-20 w-full" />}
@@ -66,7 +88,7 @@ export default function TaskCardsPage() {
             {tc.signatures.map((s, i) => (
               <div key={i} className="text-xs text-[var(--muted)]">{s.role}: {s.name} · {new Date(s.at).toLocaleString()} · {s.hash}</div>
             ))}
-            <div className="flex gap-2 pt-1">
+            <div className="flex flex-wrap gap-2 pt-1 items-center">
               <button type="button" className="text-xs px-2.5 py-1 rounded border border-[var(--border)]" onClick={() => sign(tc.id, "performer")}>
                 Sign (performer)
               </button>
@@ -75,6 +97,19 @@ export default function TaskCardsPage() {
                   RII sign (certifying)
                 </button>
               )}
+              <label className="text-xs px-2.5 py-1 rounded border border-[var(--border)] cursor-pointer">
+                Attach evidence
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  className="sr-only"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) attach(tc.id, f);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
             </div>
           </div>
         ))}

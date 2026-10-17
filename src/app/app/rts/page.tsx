@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api/client";
 import { useToast } from "@/lib/toast";
+import { textToPdf } from "@/lib/pdf/simple";
 
 export default function RtsPage() {
   const [aircraft, setAircraft] = useState<{ id: string; registration: string; status: string }[]>([]);
@@ -30,6 +31,19 @@ export default function RtsPage() {
     toast("RTS package generated", "success");
   }
 
+  function downloadPdf() {
+    if (!text) return;
+    const lines = text.split("\n");
+    const blob = textToPdf("Castair RTS Package", lines);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `castair-rts-${Date.now()}.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast("PDF downloaded", "success");
+  }
+
   async function release() {
     if (!selected) return;
     if (!window.confirm("Confirm RTS release? Certifying staff only. Audited.")) return;
@@ -48,7 +62,7 @@ export default function RtsPage() {
     <>
       <header className="border-b border-[var(--border)] px-6 py-3 bg-white">
         <h1 className="font-medium">RTS package</h1>
-        <p className="text-xs text-[var(--muted)]">One-click assembly · release is certifying-only on the server</p>
+        <p className="text-xs text-[var(--muted)]">Generate · PDF · certifying-only release</p>
       </header>
       <div className="p-6 space-y-4 max-w-3xl animate-fade-up">
         <div className="castair-card p-4 bg-white space-y-3">
@@ -59,8 +73,9 @@ export default function RtsPage() {
               <option key={a.id} value={a.id}>{a.registration} — {a.status}</option>
             ))}
           </select>
-          <div className="flex gap-2">
-            <button type="button" onClick={generate} className="text-sm px-3 py-1.5 rounded-lg bg-[var(--accent)] text-white font-medium">Generate package</button>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={generate} className="text-sm px-3 py-1.5 rounded-lg bg-[var(--accent)] text-white font-medium">Generate</button>
+            <button type="button" onClick={downloadPdf} disabled={!text} className="text-sm px-3 py-1.5 rounded-lg border border-[var(--border)] font-medium disabled:opacity-40">Download PDF</button>
             <button type="button" onClick={release} className="text-sm px-3 py-1.5 rounded-lg border border-[var(--border)] font-medium">Release RTS</button>
           </div>
         </div>
