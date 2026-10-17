@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { api, setToken, getToken } from "@/lib/api/client";
 import { CommandPalette } from "@/components/CommandPalette";
+import { OfflineConflicts } from "@/components/OfflineConflicts";
 
 const nav = [
   { href: "/app", label: "Aircraft" },
@@ -172,6 +173,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             Offline — reads use cache; writes queue until reconnect. Conflict review required for findings and signatures.
           </div>
         )}
+        <OfflineConflicts />
         <div className="md:hidden border-b border-[var(--border)] bg-white px-3 py-2 flex items-center gap-2">
           <button type="button" className="text-sm px-2 py-1 rounded border border-[var(--border)]" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
             Menu
