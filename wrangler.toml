@@ -3,13 +3,14 @@ compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
-# Uncomment when D1 is created:
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "castair-db"
-# database_id = "YOUR_D1_ID"
+# D1 — source of truth (binding name must be DB)
+# Replace database_id with the ID from: D1 → castair-db → Settings
+[[d1_databases]]
+binding = "DB"
+database_name = "castair-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
 
-# Uncomment when R2 is created:
+# R2 — uncomment after you create bucket castair-evidence
 # [[r2_buckets]]
 # binding = "EVIDENCE"
 # bucket_name = "castair-evidence"
