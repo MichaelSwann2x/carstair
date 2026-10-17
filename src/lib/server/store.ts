@@ -1,7 +1,5 @@
 /**
- * Online source-of-truth store.
- * In-memory on the edge for deployability without D1 binding;
- * swap implementations to D1 using schema/d1.sql when bound.
+ * Online source-of-truth store (in-memory until D1 adapter is fully wired).
  */
 import type {
   Tenant,
@@ -62,7 +60,9 @@ export const store = {
     const t: Tenant = {
       id: uid(),
       name,
-      slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") + (isDemo ? `-demo-${Date.now()}` : ""),
+      slug:
+        name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") +
+        (isDemo ? `-demo-${Date.now()}` : ""),
       isDemo,
       createdAt: new Date().toISOString(),
     };
@@ -90,6 +90,7 @@ export const store = {
     return token;
   },
   getSession(token: string) {
+    // Prefer stateless tokens (handled in auth.ts). Legacy map kept for compatibility.
     const s = db().sessions.get(token);
     if (!s || s.expiresAt < Date.now()) {
       if (s) db().sessions.delete(token);

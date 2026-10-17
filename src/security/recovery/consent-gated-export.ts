@@ -1,5 +1,4 @@
-import { randomBytes } from "@noble/hashes/utils";
-import { bytesToHex } from "@noble/hashes/utils";
+import { randomBytes, bytesToHex } from "@noble/hashes/utils";
 import { encryptPackage } from "../crypto/envelope";
 import type { UserRecoveryConfig, BackdropDestination } from "../storage/recovery-config";
 import type { AttackSignal } from "../tron/types";
@@ -13,10 +12,7 @@ export interface RecoveryPackage {
   signal: AttackSignal;
 }
 
-/**
- * NEVER runs without UserRecoveryConfig.optInActive === true.
- * Recovery packages are encrypted with the user's master-key material before leaving.
- */
+/** NEVER runs without UserRecoveryConfig.optInActive === true. */
 export async function maybeExportOnAttack(
   userId: string,
   signal: AttackSignal,

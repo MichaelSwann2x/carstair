@@ -1,4 +1,4 @@
-import { sha256 } from "@noble/hashes/sha2";
+import { sha256 } from "@noble/hashes/sha256";
 import { bytesToHex } from "@noble/hashes/utils";
 import { checkAndReserve, releaseBytes } from "./quota";
 
@@ -25,7 +25,7 @@ function key(userId: string, hash: string) {
   return `${userId}:${hash}`;
 }
 
-/** In-process content-addressed store with hard quota. Swap body for D1/R2 later. */
+/** Content-addressed store with hard quota. Swap for D1/R2 persistence later. */
 export const memoryBlobStore: BlobStore = {
   async put(userId, hash, data) {
     const k = key(userId, hash);
