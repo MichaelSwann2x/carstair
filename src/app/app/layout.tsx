@@ -19,6 +19,7 @@ const nav = [
   { href: "/app/rts", label: "RTS package" },
   { href: "/app/audit", label: "Audit log" },
   { href: "/app/exports", label: "Exports" },
+  { href: "/app/security", label: "Security" },
 ];
 
 type Me = {
@@ -96,7 +97,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!me) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Link href="/login" className="underline text-sm">Sign in</Link>
+        <Link href="/login" className="underline text-sm">
+          Sign in
+        </Link>
       </div>
     );
   }
@@ -104,7 +107,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navContent = (
     <>
       <div className="flex items-center gap-2 px-2 mb-1">
-        <Image src="/logo.svg" alt="" width={22} height={22} />
+        <Image src="/logo.svg?v=3" alt="" width={22} height={22} unoptimized />
         <span className="font-semibold tracking-tight">Castair</span>
       </div>
       <div className="text-[11px] text-[var(--muted)] px-2 truncate">{me.tenant.name}</div>
@@ -122,7 +125,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               href={item.href}
               onClick={closeDrawer}
               className={`px-2 py-1.5 rounded-md text-sm ${
-                active ? "bg-[var(--accent-soft)] font-medium text-black" : "text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-black"
+                active
+                  ? "bg-[var(--accent-soft)] font-medium text-black"
+                  : "text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-black"
               }`}
               aria-current={active ? "page" : undefined}
             >
@@ -175,7 +180,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         )}
         <OfflineConflicts />
         <div className="md:hidden border-b border-[var(--border)] bg-white px-3 py-2 flex items-center gap-2">
-          <button type="button" className="text-sm px-2 py-1 rounded border border-[var(--border)]" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+          <button
+            type="button"
+            className="text-sm px-2 py-1 rounded border border-[var(--border)]"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Open menu"
+          >
             Menu
           </button>
           <span className="font-semibold text-sm">Castair</span>
