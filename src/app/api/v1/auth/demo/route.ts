@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { store, uid } from "@/lib/server/store";
+import { uid } from "@/lib/server/store";
 import { seedDemoTenant } from "@/lib/server/demo-seed";
 import { mintSessionToken, roleLabel } from "@/lib/server/session-token";
 import type { Role, Tenant, User } from "@/lib/server/types";
@@ -24,12 +24,6 @@ export async function POST(req: NextRequest) {
       isDemo: true,
       createdAt: new Date().toISOString(),
     };
-    // Best-effort store (may not persist across isolates)
-    try {
-      store.createTenant("Demo MRO", true);
-    } catch {
-      /* ignore */
-    }
 
     const user: User = {
       id: uid(),
