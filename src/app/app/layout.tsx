@@ -107,13 +107,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navContent = (
     <>
       <div className="flex items-center gap-2 px-2 mb-1">
-        <Image src="/logo.svg?v=3" alt="" width={22} height={22} unoptimized />
-        <span className="font-semibold tracking-tight">Castair</span>
+        <Image src="/logo.svg?v=bird" alt="" width={22} height={22} unoptimized />
+        <span className="font-semibold tracking-tight">Carstair</span>
       </div>
       <div className="text-[11px] text-[var(--muted)] px-2 truncate">{me.tenant.name}</div>
       {me.tenant.isDemo && (
         <div className="mx-2 mt-1 mb-3 text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 inline-block">
-          Demo
+          Sample
         </div>
       )}
       <nav className="flex flex-col gap-0.5 flex-1" aria-label="App">
@@ -126,8 +126,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               onClick={closeDrawer}
               className={`px-2 py-1.5 rounded-md text-sm ${
                 active
-                  ? "bg-[var(--accent-soft)] font-medium text-black"
-                  : "text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-black"
+                  ? "bg-[var(--accent-soft)] font-medium text-[#0B1F3A]"
+                  : "text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-[#0B1F3A]"
               }`}
               aria-current={active ? "page" : undefined}
             >
@@ -137,34 +137,34 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         })}
       </nav>
       <div className="border-t border-[var(--border)] pt-3 mt-3 space-y-1 text-xs text-[var(--muted)]">
-        <div className="px-2 truncate text-black">{me.user.name}</div>
+        <div className="px-2 truncate text-[#0B1F3A]">{me.user.name}</div>
         <div className="px-2 uppercase tracking-wide">{me.user.role.replace("_", " ")}</div>
-        <button type="button" className="px-2 block hover:text-black" onClick={() => setCompact((c) => !c)}>
+        <button type="button" className="px-2 block hover:text-[#0B1F3A]" onClick={() => setCompact((c) => !c)}>
           Density: {compact ? "compact" : "comfortable"}
         </button>
-        <button type="button" className="px-2 block hover:text-black" onClick={() => setForceOffline((v) => !v)}>
-          {forceOffline ? "Force offline: on" : "Force offline: off"}
+        <button type="button" className="px-2 block hover:text-[#0B1F3A]" onClick={() => setForceOffline((v) => !v)}>
+          {forceOffline ? "Work offline: on" : "Work offline: off"}
         </button>
-        <button type="button" className="px-2 block hover:text-black" onClick={() => setPaletteOpen(true)}>
+        <button type="button" className="px-2 block hover:text-[#0B1F3A]" onClick={() => setPaletteOpen(true)}>
           Search (⌘K)
         </button>
         <button
           type="button"
-          className="px-2 block hover:text-black pt-1"
+          className="px-2 block hover:text-[#0B1F3A] pt-1"
           onClick={async () => {
             await api("/api/v1/auth/logout", { method: "POST" });
             setToken(null);
             router.push("/login");
           }}
         >
-          {me.tenant.isDemo ? "Exit demo / Sign in" : "Sign out"}
+          {me.tenant.isDemo ? "Leave sample / Sign in" : "Sign out"}
         </button>
       </div>
     </>
   );
 
   return (
-    <div className="min-h-screen flex bg-[var(--background)] text-black">
+    <div className="min-h-screen flex bg-[var(--background)] text-[#0B1F3A]">
       <aside className="hidden md:flex w-52 border-r border-[var(--border)] bg-white p-3 flex-col shrink-0">{navContent}</aside>
       {drawerOpen && (
         <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
@@ -175,7 +175,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0 overflow-auto">
         {!online && (
           <div className="bg-amber-100 text-amber-950 text-xs px-4 py-2 border-b border-amber-200" role="status">
-            Offline — reads use cache; writes queue until reconnect. Conflict review required for findings and signatures.
+            No connection — cached data only. Findings and signatures queue until you are back online.
           </div>
         )}
         <OfflineConflicts />
@@ -188,8 +188,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           >
             Menu
           </button>
-          <span className="font-semibold text-sm">Castair</span>
-          {me.tenant.isDemo && <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 rounded">DEMO</span>}
+          <span className="font-semibold text-sm">Carstair</span>
+          {me.tenant.isDemo && <span className="text-[10px] bg-amber-100 text-amber-900 px-1.5 rounded">SAMPLE</span>}
         </div>
         {children}
       </div>
