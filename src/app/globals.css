@@ -3,21 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
+  --background: #f4f5f7;
   --surface: #ffffff;
-  --surface-elevated: #ffffff;
-  --foreground: #09090b;
-  --muted: #71717a;
-  --border: #e4e4e7;
-  --accent: #0a1628;
-  --accent-soft: #f4f4f5;
+  --foreground: #0b1f3a;
+  --muted: #6b7c93;
+  --border: #e2e6ec;
+  --accent: #0b1f3a;
+  --accent-soft: #eef1f5;
   --success: #166534;
   --warning: #a16207;
   --danger: #b91c1c;
-  --highlight: #0a1628;
   --critical-bg: #fef2f2;
   --warning-bg: #fffbeb;
-  --motion: 200ms cubic-bezier(0.16, 1, 0.3, 1);
   --density: 1;
 }
 
@@ -49,7 +46,7 @@ body.density-compact {
 }
 
 :focus-visible {
-  outline: 2px solid #52525b;
+  outline: 2px solid #6b7c93;
   outline-offset: 2px;
 }
 
@@ -69,7 +66,7 @@ body.density-compact {
 .castair-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .status-rts {
@@ -87,24 +84,18 @@ body.density-compact {
   font-weight: 500;
 }
 .status-open {
-  color: #1e3a5f;
-  background: #eff6ff;
+  color: #0b1f3a;
+  background: #eef1f5;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
   font-weight: 500;
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #e4e4e7 25%, #f4f4f5 50%, #e4e4e7 75%);
+  background: linear-gradient(90deg, #e2e6ec 25%, #f4f5f7 50%, #e2e6ec 75%);
   background-size: 200% 100%;
   animation: shimmer 1.2s infinite;
   border-radius: 4px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .skeleton {
-    animation: none;
-    background: #e4e4e7;
-  }
 }
 @keyframes shimmer {
   0% {
@@ -115,6 +106,9 @@ body.density-compact {
   }
 }
 
+.animate-fade-up {
+  animation: fade-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -124,9 +118,6 @@ body.density-compact {
     opacity: 1;
     transform: translateY(0);
   }
-}
-.animate-fade-up {
-  animation: fade-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .sr-only {
@@ -141,45 +132,6 @@ body.density-compact {
   border: 0;
 }
 
-/* Pixel plane drift */
-.plane-1 {
-  animation: fly 26s linear infinite;
-}
-.plane-2 {
-  animation: fly-slow 38s linear infinite;
-}
-@keyframes fly {
-  0% {
-    transform: translateX(-40px);
-    opacity: 0;
-  }
-  6% {
-    opacity: 1;
-  }
-  94% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(520px);
-    opacity: 0;
-  }
-}
-@keyframes fly-slow {
-  0% {
-    transform: translateX(60px);
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  92% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-480px);
-    opacity: 0;
-  }
-}
 .workflow-card {
   animation: rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -191,12 +143,5 @@ body.density-compact {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .plane-1,
-  .plane-2,
-  .workflow-card {
-    animation: none;
   }
 }

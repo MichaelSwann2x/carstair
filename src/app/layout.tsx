@@ -3,9 +3,9 @@ import "./globals.css";
 import { ToastProvider } from "@/lib/toast";
 
 export const metadata: Metadata = {
-  title: "Castair — Aircraft QC & RTS Inspector",
+  title: "Carstair — Maintenance control & return to service",
   description:
-    "Offline-capable aviation quality control, electronic job cards, dual-control RTS approvals.",
+    "Task cards, dual inspection, airworthiness records, and return-to-service for maintenance organisations.",
   icons: { icon: "/favicon.svg" },
 };
 
@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased min-h-screen bg-[var(--background)] text-black">
+      <body className="antialiased min-h-screen bg-[#F4F5F7] text-[#0B1F3A]">
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
