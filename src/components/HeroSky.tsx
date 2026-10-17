@@ -1,59 +1,103 @@
 "use client";
 
-/** Navy pixel-art sky: clouds + planes (Kimpton restraint, aviation theme) */
+/**
+ * Navy pixel-art sky — Kimpton-style soft focal visual.
+ * Crisp pixel grid, planes + clouds, deep navy palette.
+ */
 export function HeroSky() {
-  const W = 48;
-  const H = 22;
-  // Procedural soft pixel field
-  const cells: { x: number; y: number; c: string }[] = [];
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      const n = (Math.sin(x * 0.4 + y * 0.7) + Math.cos(x * 0.2 - y * 0.3)) * 0.5;
-      let c = "#0b1f3a";
-      if (y < 8 && n > 0.3) c = "#1e3a5f";
-      if (y < 6 && n > 0.55) c = "#2d4a6f";
-      if (y < 5 && n > 0.75) c = "#3d5a80";
-      // cloud bands
-      if (y >= 4 && y <= 7 && ((x > 6 && x < 14) || (x > 22 && x < 32) || (x > 36 && x < 44))) {
-        if ((x + y) % 3 !== 0) c = "#4a6fa5";
-        if ((x + y) % 5 === 0) c = "#5c7fb5";
+  const COLS = 64;
+  const ROWS = 28;
+  const px = 10;
+
+  const sky = (x: number, y: number) => {
+    // base depth gradient
+    if (y > ROWS - 3) return "#060d18";
+    if (y > ROWS - 5) return "#0a1628";
+    const wave = Math.sin(x * 0.35 + y * 0.55) + Math.cos(x * 0.18 - y * 0.25);
+    if (y < 10 && wave > 0.9) return "#3d5a80";
+    if (y < 9 && wave > 0.55) return "#2a4a6e";
+    if (y < 11 && wave > 0.25) return "#1e3a5f";
+    if (y < 14) return "#12263f";
+    return "#0b1f3a";
+  };
+
+  // Cloud stamps (pixel blobs)
+  const cloudCells = new Map<string, string>();
+  const stampCloud = (cx: number, cy: number, w: number, h: number) => {
+    for (let dy = 0; dy < h; dy++) {
+      for (let dx = 0; dx < w; dx++) {
+        const nx = dx / w - 0.5;
+        const ny = dy / h - 0.5;
+        if (nx * nx * 3 + ny * ny * 5 < 0.55) {
+          const key = `${cx + dx},${cy + dy}`;
+          const edge = nx * nx * 3 + ny * ny * 5 > 0.35;
+          cloudCells.set(key, edge ? "#2a4a6e" : "#4a6fa5");
+          if (!edge && (dx + dy) % 4 === 0) cloudCells.set(key, "#5c7fb5");
+        }
       }
-      if (y >= 8 && y <= 10 && x > 16 && x < 26 && (x + y) % 2 === 0) c = "#3d5a80";
-      cells.push({ x, y, c });
+    }
+  };
+  stampCloud(6, 4, 14, 6);
+  stampCloud(24, 3, 16, 7);
+  stampCloud(44, 5, 14, 6);
+  stampCloud(18, 9, 10, 4);
+
+  // Plane pixels relative origin
+  const planePixels = [
+    [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1],
+    [6, 0], [3, 0], [3, 2], [1, 1],
+  ];
+
+  const cells: { x: number; y: number; c: string }[] = [];
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      const key = `${x},${y}`;
+      cells.push({ x, y, c: cloudCells.get(key) ?? sky(x, y) });
     }
   }
 
-  // Pixel plane sprites (drawn as rects on top)
-  const plane = (ox: number, oy: number, color: string) =>
-    [
-      [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1],
-      [5, 0], [2, 0], [2, 2], [1, 1],
-    ].map(([px, py], i) => (
-      <rect key={`${ox}-${oy}-${i}`} x={(ox + px) * 12} y={(oy + py) * 12} width={12} height={12} fill={color} />
-    ));
-
   return (
     <div
-      className="relative w-full max-w-[920px] mx-auto aspect-[2.2/1] rounded-2xl overflow-hidden border border-[#1e3a5f]/40 shadow-[0_24px_80px_-24px_rgba(11,31,58,0.35)]"
+      className="relative w-full rounded-xl overflow-hidden border border-[#1e3a5f]/30"
+      style={{ aspectRatio: "2.4 / 1" }}
       role="img"
-      aria-label="Pixel illustration of aircraft among clouds"
+      aria-label="Navy pixel art of aircraft flying through clouds"
     >
       <svg
         className="absolute inset-0 w-full h-full"
-        viewBox={`0 0 ${W * 12} ${H * 12}`}
+        viewBox={`0 0 ${COLS * px} ${ROWS * px}`}
         preserveAspectRatio="xMidYMid slice"
         shapeRendering="crispEdges"
         aria-hidden
       >
         {cells.map((p, i) => (
-          <rect key={i} x={p.x * 12} y={p.y * 12} width={12} height={12} fill={p.c} />
+          <rect key={i} x={p.x * px} y={p.y * px} width={px} height={px} fill={p.c} />
         ))}
-        <g className="plane-1">{plane(2, 12, "#e8eef5")}</g>
-        <g className="plane-2">{plane(30, 15, "#c5d4e8")}</g>
-        {/* ground band */}
-        {Array.from({ length: W }).map((_, x) => (
-          <rect key={`g${x}`} x={x * 12} y={(H - 2) * 12} width={12} height={24} fill="#071528" />
-        ))}
+        {/* planes */}
+        <g className="plane-1">
+          {planePixels.map(([dx, dy], i) => (
+            <rect
+              key={`p1-${i}`}
+              x={(4 + dx) * px}
+              y={(14 + dy) * px}
+              width={px}
+              height={px}
+              fill={i === 0 ? "#94a3b8" : "#e8eef5"}
+            />
+          ))}
+        </g>
+        <g className="plane-2">
+          {planePixels.map(([dx, dy], i) => (
+            <rect
+              key={`p2-${i}`}
+              x={(38 + dx) * px}
+              y={(17 + dy) * px}
+              width={px}
+              height={px}
+              fill={i === 0 ? "#64748b" : "#c5d4e8"}
+            />
+          ))}
+        </g>
       </svg>
     </div>
   );
