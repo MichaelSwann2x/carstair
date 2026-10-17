@@ -62,9 +62,6 @@ body.density-compact {
 .castair-table td {
   @apply border-b border-[var(--border)] py-2.5 px-3;
 }
-.castair-table tbody tr {
-  transition: background var(--motion);
-}
 .castair-table tbody tr:hover {
   background: var(--accent-soft);
 }
@@ -73,12 +70,6 @@ body.density-compact {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  transition: border-color var(--motion);
-}
-
-.agent-panel {
-  background: var(--surface-elevated);
-  border-left: 1px solid var(--border);
 }
 
 .status-rts {
@@ -148,4 +139,85 @@ body.density-compact {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Hero sky */
+.cloud-a {
+  animation: drift 28s ease-in-out infinite;
+}
+.cloud-b {
+  animation: drift 36s ease-in-out infinite reverse;
+}
+.cloud-c {
+  animation: drift 42s ease-in-out infinite;
+}
+.plane-1 {
+  animation: fly 22s linear infinite;
+}
+.plane-2 {
+  animation: fly-slow 32s linear infinite;
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(24px);
+  }
+}
+@keyframes fly {
+  0% {
+    transform: translateX(-80px);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.55;
+  }
+  92% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateX(1100px);
+    opacity: 0;
+  }
+}
+@keyframes fly-slow {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.4;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(-900px);
+    opacity: 0;
+  }
+}
+.workflow-card {
+  animation: rise 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cloud-a,
+  .cloud-b,
+  .cloud-c,
+  .plane-1,
+  .plane-2,
+  .workflow-card {
+    animation: none;
+  }
 }

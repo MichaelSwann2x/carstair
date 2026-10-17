@@ -2,3 +2,14 @@ name = "carstair"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
+
+# Uncomment when D1 is created:
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "castair-db"
+# database_id = "YOUR_D1_ID"
+
+# Uncomment when R2 is created:
+# [[r2_buckets]]
+# binding = "EVIDENCE"
+# bucket_name = "castair-evidence"

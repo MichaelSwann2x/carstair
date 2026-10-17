@@ -1,9 +1,5 @@
 "use client";
 
-/**
- * Kimpton-inspired soft sky: calm particle clouds + silhouette aircraft.
- * Pure CSS/SVG — no video file.
- */
 export function HeroSky() {
   return (
     <div
@@ -11,7 +7,6 @@ export function HeroSky() {
       role="img"
       aria-label="Soft illustration of aircraft among clouds"
     >
-      {/* Soft pointillist cloud field */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1200 540" preserveAspectRatio="xMidYMid slice" aria-hidden>
         <defs>
           <radialGradient id="g1" cx="50%" cy="40%" r="50%">
@@ -22,122 +17,26 @@ export function HeroSky() {
             <feGaussianBlur stdDeviation="8" />
           </filter>
         </defs>
-
-        {/* Cloud blobs */}
         <ellipse className="cloud-a" cx="200" cy="120" rx="140" ry="50" fill="url(#g1)" filter="url(#soft)" />
         <ellipse className="cloud-b" cx="480" cy="90" rx="160" ry="55" fill="url(#g1)" filter="url(#soft)" />
         <ellipse className="cloud-c" cx="820" cy="130" rx="180" ry="60" fill="url(#g1)" filter="url(#soft)" />
         <ellipse className="cloud-a" cx="1000" cy="100" rx="120" ry="45" fill="url(#g1)" filter="url(#soft)" />
         <ellipse className="cloud-b" cx="350" cy="200" rx="100" ry="40" fill="url(#g1)" filter="url(#soft)" opacity="0.7" />
         <ellipse className="cloud-c" cx="700" cy="220" rx="130" ry="42" fill="url(#g1)" filter="url(#soft)" opacity="0.65" />
-
-        {/* Pointillist dots */}
         {Array.from({ length: 80 }).map((_, i) => {
           const x = (i * 97) % 1200;
           const y = 40 + ((i * 53) % 200);
           const r = 0.8 + (i % 3) * 0.4;
-          return (
-            <circle
-              key={i}
-              cx={x}
-              cy={y}
-              r={r}
-              fill="#94a3b8"
-              opacity={0.15 + (i % 5) * 0.05}
-              className="dot"
-            />
-          );
+          return <circle key={i} cx={x} cy={y} r={r} fill="#94a3b8" opacity={0.15 + (i % 5) * 0.05} />;
         })}
-
-        {/* Aircraft silhouettes */}
-        <g className="plane-1" transform="translate(0,0)">
-          <path
-            d="M80 280 L160 268 L280 272 L300 265 L310 272 L290 278 L200 282 L160 295 L145 282 Z"
-            fill="#3f3f46"
-            opacity="0.55"
-          />
-          <ellipse cx="210" cy="274" rx="8" ry="3" fill="#71717a" opacity="0.4" />
+        <g className="plane-1">
+          <path d="M80 280 L160 268 L280 272 L300 265 L310 272 L290 278 L200 282 L160 295 L145 282 Z" fill="#3f3f46" opacity="0.55" />
         </g>
         <g className="plane-2">
-          <path
-            d="M900 320 L980 308 L1080 314 L1105 306 L1115 314 L1090 320 L1000 324 L960 338 L945 324 Z"
-            fill="#52525b"
-            opacity="0.4"
-          />
+          <path d="M900 320 L980 308 L1080 314 L1105 306 L1115 314 L1090 320 L1000 324 L960 338 L945 324 Z" fill="#52525b" opacity="0.4" />
         </g>
-
-        {/* Distant hangar horizon line */}
         <path d="M0 420 Q300 400 600 415 T1200 405 L1200 540 L0 540 Z" fill="#e4e4e7" opacity="0.5" />
-        <path d="M0 430 Q400 418 800 428 T1200 420" fill="none" stroke="#d4d4d8" strokeWidth="1" opacity="0.8" />
       </svg>
-
-      <style jsx>{`
-        .cloud-a {
-          animation: drift 28s ease-in-out infinite;
-        }
-        .cloud-b {
-          animation: drift 36s ease-in-out infinite reverse;
-        }
-        .cloud-c {
-          animation: drift 42s ease-in-out infinite;
-        }
-        .plane-1 {
-          animation: fly 22s linear infinite;
-        }
-        .plane-2 {
-          animation: fly-slow 32s linear infinite;
-        }
-        @keyframes drift {
-          0%,
-          100% {
-            transform: translateX(0);
-          }
-          50% {
-            transform: translateX(24px);
-          }
-        }
-        @keyframes fly {
-          0% {
-            transform: translateX(-80px);
-            opacity: 0;
-          }
-          8% {
-            opacity: 0.55;
-          }
-          92% {
-            opacity: 0.55;
-          }
-          100% {
-            transform: translateX(1100px);
-            opacity: 0;
-          }
-        }
-        @keyframes fly-slow {
-          0% {
-            transform: translateX(100px);
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.4;
-          }
-          90% {
-            opacity: 0.4;
-          }
-          100% {
-            transform: translateX(-900px);
-            opacity: 0;
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .cloud-a,
-          .cloud-b,
-          .cloud-c,
-          .plane-1,
-          .plane-2 {
-            animation: none;
-          }
-        }
-      `}</style>
     </div>
   );
 }
