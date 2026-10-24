@@ -20,120 +20,29 @@ export type Account = {
   id: string;
   name: string;
   broker: string;
-  type: "live" | "demo" | "prop";
+  type: "live" | "prop";
   firm?: string;
   balance: number;
   equity: number;
 };
 
-const STORAGE_KEY = "carstair_trades_v1";
-const ACCOUNTS_KEY = "carstair_accounts_v1";
+const STORAGE_KEY = "carstair_trades_v2";
+const ACCOUNTS_KEY = "carstair_accounts_v2";
 
-export const SAMPLE_TRADES: Trade[] = [
-  {
-    id: "t1",
-    symbol: "EURUSD",
-    side: "Long",
-    entry: 1.0852,
-    exit: 1.0891,
-    size: 1.0,
-    pnl: 390,
-    rMultiple: 1.48,
-    grade: "A+",
-    setup: "London open break",
-    session: "London",
-    emotions: ["patient", "disciplined"],
-    openedAt: "2026-10-22T08:15:00Z",
-    closedAt: "2026-10-22T09:42:00Z",
-    accountId: "a1",
-  },
-  {
-    id: "t2",
-    symbol: "GBPUSD",
-    side: "Short",
-    entry: 1.3045,
-    exit: 1.3078,
-    size: 0.5,
-    pnl: -165,
-    rMultiple: -0.6,
-    grade: "C",
-    setup: "Revenge entry",
-    session: "London",
-    emotions: ["angry", "rushed"],
-    openedAt: "2026-10-22T10:01:00Z",
-    closedAt: "2026-10-22T10:18:00Z",
-    accountId: "a1",
-  },
-  {
-    id: "t3",
-    symbol: "XAUUSD",
-    side: "Long",
-    entry: 2650.4,
-    exit: 2668.2,
-    size: 0.2,
-    pnl: 356,
-    rMultiple: 2.1,
-    grade: "A",
-    setup: "NY session continuation",
-    session: "New York",
-    emotions: ["calm", "focused"],
-    openedAt: "2026-10-23T14:30:00Z",
-    closedAt: "2026-10-23T16:05:00Z",
-    accountId: "a2",
-  },
-  {
-    id: "t4",
-    symbol: "USDJPY",
-    side: "Short",
-    entry: 149.82,
-    exit: 149.21,
-    size: 1.5,
-    pnl: 610,
-    rMultiple: 1.9,
-    grade: "A+",
-    setup: "Asia range fade",
-    session: "Asia",
-    emotions: ["patient"],
-    openedAt: "2026-10-24T01:20:00Z",
-    closedAt: "2026-10-24T03:45:00Z",
-    accountId: "a1",
-  },
-  {
-    id: "t5",
-    symbol: "EURUSD",
-    side: "Short",
-    entry: 1.087,
-    exit: 1.0845,
-    size: 0.8,
-    pnl: 200,
-    rMultiple: 1.1,
-    grade: "B",
-    setup: "News reaction",
-    session: "Overlap",
-    emotions: ["focused"],
-    openedAt: "2026-10-24T12:00:00Z",
-    closedAt: "2026-10-24T13:10:00Z",
-    accountId: "a2",
-  },
-];
-
-export const SAMPLE_ACCOUNTS: Account[] = [
-  { id: "a1", name: "IC Markets MT5", broker: "IC Markets", type: "live", balance: 12450, equity: 12840 },
-  { id: "a2", name: "Lucid 50K", broker: "Lucid Trading", type: "prop", firm: "Lucid", balance: 51200, equity: 51840 },
-  { id: "a3", name: "FTMO 100K", broker: "FTMO", type: "prop", firm: "FTMO", balance: 100000, equity: 99820 },
+export const DEFAULT_ACCOUNTS: Account[] = [
+  { id: "a1", name: "IC Markets MT5", broker: "IC Markets", type: "live", balance: 0, equity: 0 },
+  { id: "a2", name: "Lucid 50K", broker: "Lucid Trading", type: "prop", firm: "Lucid", balance: 50000, equity: 50000 },
+  { id: "a3", name: "FTMO 100K", broker: "FTMO", type: "prop", firm: "FTMO", balance: 100000, equity: 100000 },
 ];
 
 export function loadTrades(): Trade[] {
-  if (typeof window === "undefined") return SAMPLE_TRADES;
+  if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_TRADES));
-      return SAMPLE_TRADES;
-    }
+    if (!raw) return [];
     return JSON.parse(raw) as Trade[];
   } catch {
-    return SAMPLE_TRADES;
+    return [];
   }
 }
 
@@ -143,16 +52,16 @@ export function saveTrades(trades: Trade[]) {
 }
 
 export function loadAccounts(): Account[] {
-  if (typeof window === "undefined") return SAMPLE_ACCOUNTS;
+  if (typeof window === "undefined") return DEFAULT_ACCOUNTS;
   try {
     const raw = localStorage.getItem(ACCOUNTS_KEY);
     if (!raw) {
-      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(SAMPLE_ACCOUNTS));
-      return SAMPLE_ACCOUNTS;
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(DEFAULT_ACCOUNTS));
+      return DEFAULT_ACCOUNTS;
     }
     return JSON.parse(raw) as Account[];
   } catch {
-    return SAMPLE_ACCOUNTS;
+    return DEFAULT_ACCOUNTS;
   }
 }
 
@@ -183,7 +92,6 @@ export function computeLiquidScore(trades: Trade[]) {
   };
 }
 
-/** Minimal MT5 report / CSV parser (Deal,Symbol,Type,Volume,Price,Profit,...) */
 export function parseMt5Csv(text: string): Trade[] {
   const lines = text.trim().split(/\r?\n/).filter(Boolean);
   if (lines.length < 2) return [];
