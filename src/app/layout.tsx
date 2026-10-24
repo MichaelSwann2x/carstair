@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Carstair — Forex & CFD Journal · MT5 · Shareable PnL",
-  description:
-    "Trading journal for forex and CFD. MetaTrader 5 import, Liquid Score, downloadable PnL cards with custom media backgrounds.",
+  title: "Carstair — CFD & Forex Journal",
+  description: "Trading journal for CFD and forex. MetaTrader 5, Liquid Score, shareable PnL cards.",
   icons: { icon: "/favicon.svg" },
 };
 
@@ -19,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased min-h-screen bg-[#0a0b0f] text-[#e2e8f0]">{children}</body>
+      <body className="antialiased min-h-screen bg-[#050608] text-[#f1f5f9]">{children}</body>
     </html>
   );
 }
