@@ -1,8 +1,17 @@
-# Carstair / Castair
+# Carstair
 
-**Aircraft Quality Control · Return-to-Service · Aviation Safety Inspector Platform**
+**Forex & CFD Trading Journal · MetaTrader 5 · Shareable PnL Cards**
 
-Live Next.js app (frontend + API routes). Offline-first Castair CMMS, external connectors (Trax, AMOS, …), agentic AD/SB / visual / airworthiness tools. Human-in-the-loop on every RTS decision.
+Dark terminal-style journal inspired by LiquidJournal and Axiom.trade, re-skinned for forex/CFD with Lucid Trading colour language and an Eye of Sauron mark.
+
+## What changed
+
+- Purpose shifted from aviation RTS to forex/CFD journaling
+- Logo: Eye of Sauron
+- Palette: near-black canvas (#0a0b0f), cyan/sky accents (#0ea5e9 / #22d3ee), high-contrast data
+- Layout density modelled on Axiom terminal (left rail, live P&L, dense trade list)
+- First-class MT5 path (CSV/report import + connection stub)
+- Share engine direction: downloadable PnL cards/videos with photo, video, audio or link backgrounds for TikTok / X / Instagram
 
 ## Run locally
 
@@ -20,24 +29,22 @@ Open http://localhost:3000
 **Root directory:** `/`  
 **Node version:** 20+
 
-Or:
-
 ```bash
-npm run deploy
+npm run pages:build && npm run pages:deploy
 ```
 
-If your project currently runs only `npm run build`, that also works after this fix (plain `next build`).
+## Product surface (current)
 
-## Product
+- `/` — new landing (dashboard mock, feature grid, share highlight)
+- `/login` — existing auth entry (demo / provision)
+- Further journal, share-canvas and live MT5 bridge tickets still open
 
-- `/` — landing
-- `/login` — demo tenant or provision organisation
-- `/app` — aircraft CRM view
-- `/app/work-packages` — work packages
-- `/app/agents` — AD/SB Monitor, Closed-Loop Visual, Explainable Airworthiness
-- `/app/connectors` — native offline CMMS or Trax / AMOS / etc.
-- `/app/approvals` — human approval queue
+## Next tickets
 
-## Security
+1. Client-side PnL card generator (canvas + optional video) with media background upload
+2. Trade log + session filters + Liquid Score
+3. MT5 CSV/report import + broker connection UI
+4. Prop/CFD desk (Lucid, FTMO, FundingPips rules)
+5. Analytics and pattern detectors
 
-Per-tenant browser sandbox for demo. Production: encrypted tenant isolation. No agent auto-signs RTS.
+Carstair parameters remain fixed. Provenance on every claim.
