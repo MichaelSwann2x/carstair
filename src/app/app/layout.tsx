@@ -2,34 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
 import { getToken, setToken } from "@/lib/api/client";
 
-const nav = [
-  { href: "/app", label: "Dashboard" },
-  { href: "/app?tab=journal", label: "Journal" },
-  { href: "/app?tab=analytics", label: "Analytics" },
-  { href: "/app?tab=prop", label: "Prop / CFD" },
-  { href: "/app?tab=share", label: "Share cards" },
-  { href: "/app?tab=mt5", label: "MT5" },
+const NAV = [
+  { tab: "", label: "Dashboard" },
+  { tab: "journal", label: "Journal" },
+  { tab: "analytics", label: "Analytics" },
+  { tab: "prop", label: "Prop / CFD" },
+  { tab: "share", label: "Share" },
+  { tab: "mt5", label: "MT5" },
 ];
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+function Shell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const params = useSearchParams();
+  const tab = params.get("tab") || "";
   const [ready, setReady] = useState(false);
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
 
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
+    if (!getToken()) {
       router.replace("/login");
       return;
     }
     try {
       const u = localStorage.getItem("carstair_user");
-      setUser(u ? JSON.parse(u) : { name: "Trader", email: "" });
+      setUser(u ? JSON.parse(u) : { name: "Trader" });
     } catch {
       setUser({ name: "Trader" });
     }
@@ -38,58 +38,78 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!ready) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm text-[#64748b] bg-[#050608]">
-        Loading…
+      <div className="min-h-screen flex items-center justify-center bg-[#050608] text-[#64748b] text-sm">
+        Loading terminal…
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex bg-[#050608] text-[#f1f5f9]">
-      <aside className="hidden md:flex w-48 border-r border-[#1a1f2a] bg-[#0c0e12] p-3 flex-col shrink-0">
-        <Link href="/" className="flex items-center gap-2 px-2 mb-4">
-          <Image src="/logo.svg" alt="" width={24} height={24} unoptimized />
-          <span className="font-semibold tracking-tight text-white text-sm">Carstair</span>
+    <div className="min-h-screen flex flex-col bg-[#050608] text-[#f1f5f9]">
+      <header className="h-10 border-b border-[#1a1f2a] flex items-center px-3 gap-3 shrink-0 bg-[#0c0e12]">
+        <Link href="/" className="flex items-center gap-1.5 shrink-0">
+          <Image src="/logo.svg" alt="" width={20} height={20} unoptimized />
+          <span className="text-[12px] font-semibold text-white">Carstair</span>
         </Link>
-        <nav className="flex flex-col gap-0.5 flex-1" aria-label="Journal">
-          {nav.map((item) => {
-            const active =
-              item.href === "/app"
-                ? pathname === "/app" &&
-                  !(typeof window !== "undefined" && new URLSearchParams(window.location.search).get("tab"))
-                : false;
+        <nav className="hidden sm:flex items-center gap-0.5 text-[11px] ml-2">
+          {NAV.map((n) => {
+            const active = tab === n.tab;
             return (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`px-2 py-1.5 rounded-md text-sm ${
-                  active
-                    ? "bg-[rgba(34,197,94,0.12)] text-[#22c55e] font-medium"
-                    : "text-[#94a3b8] hover:bg-[#12151c] hover:text-white"
+                key={n.label}
+                href={n.tab ? `/app?tab=${n.tab}` : "/app"}
+                className={`px-2 py-1 rounded ${
+                  active ? "bg-[rgba(34,197,94,0.15)] text-[#22c55e]" : "text-[#94a3b8] hover:text-white"
                 }`}
               >
-                {item.label}
+                {n.label}
               </Link>
             );
           })}
         </nav>
-        <div className="border-t border-[#1a1f2a] pt-3 text-xs text-[#64748b]">
-          <div className="px-2 truncate text-[#f1f5f9]">{user?.name || "Trader"}</div>
-          <div className="px-2 truncate">{user?.email}</div>
+        <div className="ml-auto flex items-center gap-2 text-[11px] text-[#64748b]">
+          <span className="truncate max-w-[120px] text-[#e2e8f0]">{user?.name}</span>
           <button
             type="button"
-            className="px-2 mt-2 block hover:text-white"
+            className="hover:text-white"
             onClick={() => {
               setToken(null);
               localStorage.removeItem("carstair_user");
               router.push("/login");
             }}
           >
-            Sign out
+            Out
           </button>
         </div>
-      </aside>
-      <div className="flex-1 flex flex-col min-w-0 overflow-auto">{children}</div>
+      </header>
+
+      <div className="flex-1 flex min-h-0">
+        <aside className="hidden md:flex w-40 border-r border-[#1a1f2a] bg-[#0c0e12] p-2 flex-col gap-0.5 shrink-0">
+          {NAV.map((n) => {
+            const active = tab === n.tab;
+            return (
+              <Link
+                key={n.label}
+                href={n.tab ? `/app?tab=${n.tab}` : "/app"}
+                className={`px-2 py-1.5 rounded text-[12px] ${
+                  active ? "bg-[rgba(34,197,94,0.12)] text-[#22c55e]" : "text-[#94a3b8] hover:bg-[#12151c]"
+                }`}
+              >
+                {n.label}
+              </Link>
+            );
+          })}
+        </aside>
+        <main className="flex-1 min-w-0 overflow-auto">{children}</main>
+      </div>
     </div>
+  );
+}
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#050608]" />}>
+      <Shell>{children}</Shell>
+    </Suspense>
   );
 }
