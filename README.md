@@ -2,49 +2,42 @@
 
 **Forex & CFD Trading Journal · MetaTrader 5 · Shareable PnL Cards**
 
-Dark terminal-style journal inspired by LiquidJournal and Axiom.trade, re-skinned for forex/CFD with Lucid Trading colour language and an Eye of Sauron mark.
+Dark terminal journal (LiquidJournal + Axiom layout, Lucid-dark palette, Eye of Sauron logo).
 
-## What changed
+## Features (shipped)
 
-- Purpose shifted from aviation RTS to forex/CFD journaling
-- Logo: Eye of Sauron
-- Palette: near-black canvas (#0a0b0f), cyan/sky accents (#0ea5e9 / #22d3ee), high-contrast data
-- Layout density modelled on Axiom terminal (left rail, live P&L, dense trade list)
-- First-class MT5 path (CSV/report import + connection stub)
-- Share engine direction: downloadable PnL cards/videos with photo, video, audio or link backgrounds for TikTok / X / Instagram
+- **Login** — Google button, email signup/login, sample journal (no account)
+- **Dashboard** — Total P&L, Liquid Score, win/loss, account summary, recent trades
+- **Journal** — Full trade table (symbol, side, PnL, R, grade, setup, session); localStorage persistence
+- **Analytics** — By session, by symbol, Liquid Score breakdown (win rate, PF, avg R, consistency, discipline)
+- **Prop / CFD desk** — Your accounts + Lucid, FTMO, Funding Pips, The5ers, E8, Blue Guardian
+- **Share cards** — Client-side canvas PNG generator; story / square / landscape; image background upload; download
+- **MT5** — CSV/report import (Symbol, Type, Volume, Profit); connection UI stub for live bridge
 
-## Run locally
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000
+Open http://localhost:3000 → **Open journal** or **Sign in** → lands on `/app`.
 
-## Cloudflare Pages
-
-**Build command:** `npx @cloudflare/next-on-pages@1`  
-**Build output directory:** `.vercel/output/static`  
-**Root directory:** `/`  
-**Node version:** 20+
+## Deploy (Cloudflare Pages)
 
 ```bash
-npm run pages:build && npm run pages:deploy
+npm run pages:build
+npm run pages:deploy
 ```
 
-## Product surface (current)
+Build command: `npx @cloudflare/next-on-pages@1`  
+Output: `.vercel/output/static`  
+Node 20+
 
-- `/` — new landing (dashboard mock, feature grid, share highlight)
-- `/login` — existing auth entry (demo / provision)
-- Further journal, share-canvas and live MT5 bridge tickets still open
+## Notes
 
-## Next tickets
+- Google OAuth route is currently a client demo path (real OAuth needs Google Client ID env + callback). Email/demo work fully client-side for deploy.
+- Live MT5 requires broker API / MetaQuotes server connector; CSV import is production-ready today.
+- Video/audio backgrounds are accepted in the file picker; PNG export uses image backgrounds. Video export can be added with MediaRecorder later.
 
-1. Client-side PnL card generator (canvas + optional video) with media background upload
-2. Trade log + session filters + Liquid Score
-3. MT5 CSV/report import + broker connection UI
-4. Prop/CFD desk (Lucid, FTMO, FundingPips rules)
-5. Analytics and pattern detectors
-
-Carstair parameters remain fixed. Provenance on every claim.
+Carstair parameters remain fixed.
