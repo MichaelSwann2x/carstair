@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ToastProvider } from "@/lib/toast";
 
 export const metadata: Metadata = {
-  title: "Carstair — Maintenance control & return to service",
+  title: "Carstair — Forex & CFD Journal · MT5 · Shareable PnL",
   description:
-    "Task cards, dual inspection, airworthiness records, and return-to-service for maintenance organisations.",
+    "Trading journal for forex and CFD. MetaTrader 5 import, Liquid Score, downloadable PnL cards with custom media backgrounds.",
   icons: { icon: "/favicon.svg" },
 };
 
@@ -20,9 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased min-h-screen bg-[#F4F5F7] text-[#0B1F3A]">
-        <ToastProvider>{children}</ToastProvider>
-      </body>
+      <body className="antialiased min-h-screen bg-[#0a0b0f] text-[#e2e8f0]">{children}</body>
     </html>
   );
 }
