@@ -29,7 +29,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
     try {
       const u = localStorage.getItem("carstair_user");
-      setUser(u ? JSON.parse(u) : { name: "Trader", email: "demo" });
+      setUser(u ? JSON.parse(u) : { name: "Trader", email: "" });
     } catch {
       setUser({ name: "Trader" });
     }
@@ -38,15 +38,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!ready) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm text-[#64748b]">
-        Loading journal…
+      <div className="min-h-screen flex items-center justify-center text-sm text-[#64748b] bg-[#050608]">
+        Loading…
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex bg-[#0a0b0f] text-[#e2e8f0]">
-      <aside className="hidden md:flex w-48 border-r border-[#1e293b] bg-[#0f1219] p-3 flex-col shrink-0">
+    <div className="min-h-screen flex bg-[#050608] text-[#f1f5f9]">
+      <aside className="hidden md:flex w-48 border-r border-[#1a1f2a] bg-[#0c0e12] p-3 flex-col shrink-0">
         <Link href="/" className="flex items-center gap-2 px-2 mb-4">
           <Image src="/logo.svg" alt="" width={24} height={24} unoptimized />
           <span className="font-semibold tracking-tight text-white text-sm">Carstair</span>
@@ -55,14 +55,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {nav.map((item) => {
             const active =
               item.href === "/app"
-                ? pathname === "/app" && !new URLSearchParams(typeof window !== "undefined" ? window.location.search : "").get("tab")
+                ? pathname === "/app" &&
+                  !(typeof window !== "undefined" && new URLSearchParams(window.location.search).get("tab"))
                 : false;
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`px-2 py-1.5 rounded-md text-sm ${
-                  active ? "bg-[#0ea5e915] text-[#22d3ee] font-medium" : "text-[#94a3b8] hover:bg-[#12151c] hover:text-white"
+                  active
+                    ? "bg-[rgba(34,197,94,0.12)] text-[#22c55e] font-medium"
+                    : "text-[#94a3b8] hover:bg-[#12151c] hover:text-white"
                 }`}
               >
                 {item.label}
@@ -70,8 +73,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             );
           })}
         </nav>
-        <div className="border-t border-[#1e293b] pt-3 text-xs text-[#64748b]">
-          <div className="px-2 truncate text-[#e2e8f0]">{user?.name || "Trader"}</div>
+        <div className="border-t border-[#1a1f2a] pt-3 text-xs text-[#64748b]">
+          <div className="px-2 truncate text-[#f1f5f9]">{user?.name || "Trader"}</div>
           <div className="px-2 truncate">{user?.email}</div>
           <button
             type="button"
