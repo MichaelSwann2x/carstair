@@ -1,28 +1,27 @@
 # Carstair
 
-**CFD & Forex trading journal**
+CFD & Forex trading journal. LiquidJournal-shaped features. Axiom-density terminal UI. MyFunded green + Loki crown mark.
 
-Name stays Carstair. Product is a LiquidJournal-style journal for CFD/forex with Axiom-density terminal layout and MyFundedPerps colour language (near-black + neon green).
+## Spec & plan
 
-## Stack surface
+- [docs/SPEC.md](docs/SPEC.md) — product, layout, data, stack, success criteria
+- [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) — phases
 
-- Landing: terminal shell on first paint (left rail, PnL, trade list, TradingView mini, Forex Factory mini, share card)
-- Auth: **Sign up** primary · Google · email · Log in toggle · **no demo**
-- App: Dashboard · Journal · Analytics · Prop/CFD desk · Share cards · MT5 CSV
-- Logo: Loki crown (horned helmet)
-- Palette: `#050608` canvas, `#22c55e` green
+## Phase 1 (shipped on main)
 
-## Run
+Terminal at `/app` after Sign up:
+
+- Dashboard (score, 7-day bars, session filter, recent)
+- Journal (add with emotions/notes/entry/exit/lots, delete, table)
+- Analytics (equity SVG, P&L calendar, by session/setup)
+- Prop/CFD desk (accounts + firm list)
+- Share (PNG download, image background, story/square/landscape)
+- MT5 CSV import
+- Right rail: TradingView + score
+
+## Run / deploy
 
 ```bash
-npm install
-npm run dev
-```
-
-## Deploy
-
-```bash
+npm install && npm run dev
 npm run pages:build && npm run pages:deploy
 ```
-
-Aviation / RTS / aircraft routes under `/app/*` and `/api/v1/aircraft` etc. are legacy dead code; primary UX is `/`, `/login`, `/app` journal only. They can be deleted in a cleanup pass.
