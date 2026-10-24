@@ -1,8 +1,8 @@
 {
   "name": "carstair",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "private": true,
-  "description": "Castair — online-first Aircraft QC & RTS platform",
+  "description": "Carstair — Forex & CFD journal with MT5, shareable PnL cards, Lucid-dark / Axiom layout",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
