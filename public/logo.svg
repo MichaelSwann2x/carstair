@@ -1,29 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <!-- Loki-style horned crown -->
-  <defs>
-    <linearGradient id="horn" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24"/>
-      <stop offset="50%" stop-color="#f59e0b"/>
-      <stop offset="100%" stop-color="#b45309"/>
-    </linearGradient>
-    <linearGradient id="helm" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#e2e8f0"/>
-      <stop offset="100%" stop-color="#64748b"/>
-    </linearGradient>
-  </defs>
-  <!-- Left horn -->
-  <path d="M18 28 C12 18 8 8 14 4 C16 10 18 16 20 22 Z" fill="url(#horn)"/>
-  <path d="M18 28 C14 20 12 12 16 6" stroke="#92400e" stroke-width="1" fill="none" opacity="0.5"/>
-  <!-- Right horn -->
-  <path d="M46 28 C52 18 56 8 50 4 C48 10 46 16 44 22 Z" fill="url(#horn)"/>
-  <path d="M46 28 C50 20 52 12 48 6" stroke="#92400e" stroke-width="1" fill="none" opacity="0.5"/>
-  <!-- Helmet dome -->
-  <ellipse cx="32" cy="34" rx="16" ry="12" fill="url(#helm)"/>
-  <path d="M16 34 Q32 22 48 34" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-  <!-- Visor / face band -->
-  <rect x="18" y="32" width="28" height="8" rx="2" fill="#1e293b"/>
-  <rect x="22" y="34" width="8" height="4" rx="1" fill="#22c55e" opacity="0.9"/>
-  <rect x="34" y="34" width="8" height="4" rx="1" fill="#22c55e" opacity="0.9"/>
-  <!-- Chin / lower helm -->
-  <path d="M20 40 Q32 48 44 40" fill="#475569"/>
+  <path d="M28 34 C18 32 10 22 8 8 C6 2 12 4 14 10 C16 18 20 26 28 32 Z" fill="#22c55e"/>
+  <path d="M36 34 C46 32 54 22 56 8 C58 2 52 4 50 10 C48 18 44 26 36 32 Z" fill="#22c55e"/>
+  <path d="M20 34 Q32 22 44 34 L44 48 Q32 56 20 48 Z" fill="#22c55e"/>
+  <path d="M24 36 Q32 30 40 36 L40 44 Q32 50 24 44 Z" fill="#050608"/>
+  <path d="M22 36 Q32 28 42 36" stroke="#16a34a" stroke-width="1.2" fill="none"/>
+  <path d="M26 40 L38 40" stroke="#16a34a" stroke-width="1" opacity="0.7"/>
 </svg>
