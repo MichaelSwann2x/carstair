@@ -1,8 +1,8 @@
 {
   "name": "carstair",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "private": true,
-  "description": "Carstair — Forex & CFD journal with MT5, shareable PnL cards, Lucid-dark / Axiom layout",
+  "description": "Carstair — Retail CFD orderflow + multi-tool platform",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,6 +10,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "pages:build": "npx @cloudflare/next-on-pages@1",
+    "cf:build": "npx @cloudflare/next-on-pages@1",
     "pages:deploy": "npx wrangler pages deploy .vercel/output/static --project-name=carstair",
     "test:e2e": "playwright test"
   },

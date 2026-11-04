@@ -1,46 +1,45 @@
-# Cloudflare Pages — Castair / Carstair
+# Cloudflare Pages — Carstair
 
-## Correct dashboard settings (copy exactly)
+## Exact dashboard settings (required)
+
+Go to: **Cloudflare Dashboard → Workers & Pages → your project → Settings → Builds & deployments → Edit**
 
 | Field | Value |
 |--------|--------|
 | Framework preset | **None** |
 | Build command | `npx @cloudflare/next-on-pages@1` |
 | Build output directory | `.vercel/output/static` |
-| Root directory | *(empty)* |
-| **Deploy command** | **EMPTY — leave blank** |
+| Root directory | *(leave empty)* |
+| **Deploy command** | **LEAVE COMPLETELY EMPTY** |
 | Node version | `20` |
 
-## Why deploy failed (auth error 10000)
+### Critical
 
-The **build finished successfully**.  
-A **Deploy command** of `npx wrangler pages deploy ...` then ran Wrangler with `CLOUDFLARE_API_TOKEN`. That token does not have permission to create/update the Pages project, so Cloudflare returned:
+- Do **not** put `npx wrangler deploy` in Deploy command. That is a Workers command and will always fail on a Pages project.
+- Do **not** put `npx wrangler pages deploy ...` either when the project is Git-connected. Cloudflare uploads the Build output directory automatically after a successful build.
+- If Deploy command is not empty, every deploy will fail even when the build succeeds.
+
+## After changing settings
+
+1. Save the build configuration.
+2. Go to **Deployments** → **Retry deployment** (or push any commit).
+3. Wait for the build. You should see the adapter run and then a successful deployment with no deploy-command step.
+
+## Why the last two deploys failed
+
+Log line:
 
 ```
-Authentication error [code: 10000]
+Executing user deploy command: npx wrangler deploy
+✘ [ERROR] It looks like you've run a Workers-specific command in a Pages project.
 ```
 
-You do **not** need a deploy command when the project is connected to GitHub. Cloudflare Pages uploads the **Build output directory** automatically after a successful build.
+The build itself completed (including `/orderflow`). Only the deploy step failed because of the wrong command still set in the dashboard.
 
-## What to do now
-
-1. Cloudflare dashboard → your **Pages** project `carstair`
-2. **Settings** → **Builds & deployments** → **Build configurations** → Edit
-3. Set Build command and Output directory as in the table above
-4. **Clear the Deploy command** (delete whatever is there)
-5. Save → **Deployments** → Retry deployment
-
-## Optional: if you insist on a deploy command
-
-Create an API token at https://dash.cloudflare.com/profile/api-tokens with:
-
-- Account → **Cloudflare Pages** → **Edit**
-- Account → **Account Settings** → **Read** (sometimes required)
-
-Set it as `CLOUDFLARE_API_TOKEN` in Pages → Settings → Environment variables, then:
+## Local check
 
 ```bash
-npx wrangler pages deploy .vercel/output/static --project-name=carstair
+npm install
+npx @cloudflare/next-on-pages@1
+# output lands in .vercel/output/static
 ```
-
-Prefer the empty deploy command path — fewer moving parts.
