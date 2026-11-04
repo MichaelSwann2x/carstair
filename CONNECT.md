@@ -1,28 +1,18 @@
-# Cloudflare Pages — one correct setup
-
-## Settings that work with this repo
+# Cloudflare Pages settings (required)
 
 | Field | Value |
 |--------|--------|
 | Framework preset | None |
-| Build command | `npm run build` |
-| Build output directory | `.vercel/output/static` |
+| **Build command** | `npx @cloudflare/next-on-pages@1` |
+| **Build output directory** | `.vercel/output/static` |
 | Root directory | *empty* |
-| **Deploy command** | *empty* **(preferred)** |
+| **Deploy command** | *empty* |
 | Node | 20 |
 
-`npm run build` now runs `@cloudflare/next-on-pages` and writes to `.vercel/output/static`.
+Do **not** set Build command to `npm run build` when using the adapter.
+`npm run build` is plain `next build` (needed so the adapter does not recurse).
 
-## If Deploy command cannot be empty
+Deploy command must stay empty, or use:
+`npx wrangler pages deploy .vercel/output/static --project-name=carstair`
 
-Set Deploy command to **exactly**:
-
-```text
-npx wrangler pages deploy .vercel/output/static --project-name=carstair
-```
-
-Do **not** use `npx wrangler deploy` (Workers-only; always fails on Pages).
-
-## After changing settings
-
-Retry deployment once.
+Never use `npx wrangler deploy`.

@@ -1,12 +1,11 @@
 {
   "name": "carstair",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "private": true,
   "description": "Carstair — Retail CFD orderflow + multi-tool platform",
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages@1",
-    "build:next": "next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
