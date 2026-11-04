@@ -1,27 +1,46 @@
 # Carstair
 
-CFD & Forex trading journal. LiquidJournal-shaped features. Axiom-density terminal UI. MyFunded green + Loki crown mark.
+**Multi-tool platform for retail CFD & orderflow analysis.**
 
-## Spec & plan
+Free 15-minute delayed feed (dxFeed-style) for practice and learning. Footprint-style charts, volume/delta profiles, market categories, 50+ model previews, journal, prop desk, and more.
 
-- [docs/SPEC.md](docs/SPEC.md) — product, layout, data, stack, success criteria
-- [docs/BUILD_PLAN.md](docs/BUILD_PLAN.md) — phases
+Live at [carstair.com](https://carstair.com).
 
-## Phase 1 (shipped on main)
+## Core tools
 
-Terminal at `/app` after Sign up:
+- **/orderflow** — Retail CFD orderflow workspace (DeepCharts-inspired, free delayed practice feed)
+- Journal + Liquid Score + shareable PnL cards
+- Prop / CFD desk
+- MT5 import
+- 50+ trading model previews
 
-- Dashboard (score, 7-day bars, session filter, recent)
-- Journal (add with emotions/notes/entry/exit/lots, delete, table)
-- Analytics (equity SVG, P&L calendar, by session/setup)
-- Prop/CFD desk (accounts + firm list)
-- Share (PNG download, image background, story/square/landscape)
-- MT5 CSV import
-- Right rail: TradingView + score
+## Markets (orderflow)
 
-## Run / deploy
+Ind&Com · Forex · Energy · Majors · PrecMet · Ind&Com3 · Exotic · Cryptocurrencies
+
+## Free delayed feed
+
+15-minute delayed data is included for practice, learning the tools, and non-live use only. Clearly labelled in the UI. Not for live trading decisions.
+
+## Run locally
 
 ```bash
-npm install && npm run dev
-npm run pages:build && npm run pages:deploy
+npm install
+npm run dev
 ```
+
+Open http://localhost:3000  
+Orderflow: http://localhost:3000/orderflow
+
+## Deploy (Cloudflare Pages)
+
+```bash
+npm run pages:build
+npm run pages:deploy
+```
+
+## Stack
+
+Next.js 15 · React 19 · Tailwind · TypeScript
+
+Open source. Free for retail use.

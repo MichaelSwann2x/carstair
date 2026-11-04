@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Carstair — CFD & Forex Journal",
-  description: "Trading journal for CFD and forex. MetaTrader 5, Liquid Score, shareable PnL cards.",
+  title: "Carstair — Retail CFD Orderflow & Multi-Tool Platform",
+  description: "Free 15-minute delayed orderflow tools, footprint charts, 50+ models, journal, prop desk. Practice and learn with Carstair.",
   icons: { icon: "/favicon.svg" },
 };
 
