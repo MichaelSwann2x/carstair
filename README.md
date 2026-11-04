@@ -1,46 +1,39 @@
 # Carstair
 
-**Multi-tool platform for retail CFD & orderflow analysis.**
+Retail CFD orderflow + multi-tool platform.
 
-Free 15-minute delayed feed (dxFeed-style) for practice and learning. Footprint-style charts, volume/delta profiles, market categories, 50+ model previews, journal, prop desk, and more.
+- Free 15-minute delayed practice feed
+- Footprint-style charts, volume/delta profiles
+- Markets: Ind&Com, Forex, Energy, Majors, PrecMet, Ind&Com3, Exotic, Cryptocurrencies
+- 50+ model previews
+- Journal / prop desk routes still present
 
-Live at [carstair.com](https://carstair.com).
+## Cloudflare Pages (one-shot)
 
-## Core tools
+**Read [CONNECT.md](./CONNECT.md) before connecting the repo.**
 
-- **/orderflow** — Retail CFD orderflow workspace (DeepCharts-inspired, free delayed practice feed)
-- Journal + Liquid Score + shareable PnL cards
-- Prop / CFD desk
-- MT5 import
-- 50+ trading model previews
+Exact settings:
 
-## Markets (orderflow)
+| Field | Value |
+|--------|--------|
+| Build command | `npx @cloudflare/next-on-pages@1` |
+| Build output directory | `.vercel/output/static` |
+| Root directory | *empty* |
+| Deploy command | *empty* |
+| Node | 20 |
 
-Ind&Com · Forex · Energy · Majors · PrecMet · Ind&Com3 · Exotic · Cryptocurrencies
+Wrong Root directory → `Failed: root directory not found`  
+Wrong Deploy command → Workers vs Pages error
 
-## Free delayed feed
-
-15-minute delayed data is included for practice, learning the tools, and non-live use only. Clearly labelled in the UI. Not for live trading decisions.
-
-## Run locally
+## Local
 
 ```bash
 npm install
 npm run dev
-```
-
-Open http://localhost:3000  
-Orderflow: http://localhost:3000/orderflow
-
-## Deploy (Cloudflare Pages)
-
-```bash
-npm run pages:build
-npm run pages:deploy
+# http://localhost:3000
+# http://localhost:3000/orderflow
 ```
 
 ## Stack
 
-Next.js 15 · React 19 · Tailwind · TypeScript
-
-Open source. Free for retail use.
+Next.js 15 · React 19 · Tailwind · TypeScript · `@cloudflare/next-on-pages`
