@@ -1,16 +1,18 @@
 {
   "name": "carstair",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "private": true,
   "description": "Carstair — Retail CFD orderflow + multi-tool platform",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx @cloudflare/next-on-pages@1",
+    "build:next": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "pages:build": "npx @cloudflare/next-on-pages@1",
     "cf:build": "npx @cloudflare/next-on-pages@1",
+    "deploy": "npx wrangler pages deploy .vercel/output/static --project-name=carstair",
     "pages:deploy": "npx wrangler pages deploy .vercel/output/static --project-name=carstair",
     "test:e2e": "playwright test"
   },
