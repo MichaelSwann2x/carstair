@@ -11,6 +11,9 @@ export default function HomePage() {
             <span className="text-[13px] font-semibold text-white tracking-tight">Carstair</span>
           </Link>
           <nav className="flex items-center gap-1 text-[12px]">
+            <Link href="/program/starlink" className="text-[#FF6600] hover:text-white px-2.5 py-1">
+              Starlink
+            </Link>
             <Link href="/orderflow" className="text-[#22c55e] hover:text-white px-2.5 py-1">
               Orderflow
             </Link>
@@ -37,6 +40,9 @@ export default function HomePage() {
             <Link href="/orderflow" className="btn-green px-4 py-2.5 rounded-md text-[13px]">
               Open Orderflow
             </Link>
+            <Link href="/program/starlink" className="border border-[#FF6600] text-[#FF6600] px-4 py-2.5 rounded-md text-[13px] hover:bg-[#FF6600] hover:text-white">
+              easyJet Starlink Tracker
+            </Link>
             <Link href="/login" className="border border-[#2a3140] text-[#94a3b8] px-4 py-2.5 rounded-md text-[13px] hover:border-[#22c55e] hover:text-white">
               Journal & desk
             </Link>
@@ -48,10 +54,10 @@ export default function HomePage() {
 
         <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-2">
           {[
+            { t: "Starlink", d: "easyJet pre-rollout tracker — zeroed, orange/white", href: "/program/starlink" },
             { t: "Orderflow", d: "Footprint, profiles, ladder, 8 market groups", href: "/orderflow" },
             { t: "50+ Models", d: "Delta, imbalance, VWAP, TPO, absorption previews", href: "/orderflow" },
             { t: "Journal", d: "Grades, setups, emotions, MT5 CSV, Liquid Score", href: "/login" },
-            { t: "Prop desk", d: "Accounts, firms, shareable PnL cards", href: "/login" },
           ].map((f) => (
             <Link key={f.t} href={f.href} className="border border-[#1a1f2a] rounded-lg bg-[#0c0e12] p-3 hover:border-[#22c55e] transition-colors">
               <p className="text-[13px] font-medium text-white">{f.t}</p>
