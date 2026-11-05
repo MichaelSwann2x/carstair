@@ -1,6 +1,22 @@
 # Carstair
 
-Retail CFD orderflow + multi-tool platform.
+Multi-tool platform. Includes the **easyJet Starlink pre-rollout tracker** at `/program/starlink`.
+
+## Starlink Tracker (easyJet)
+
+Orange & white themed dashboard modelled on the United FleetRadar Starlink layout, fully zeroed because the programme has not started.
+
+- Flight number search (returns pre-rollout message)
+- Fleet completion 0%
+- 0 aircraft installed (A320 / A320neo / A321neo in scope)
+- A319 noted as excluded
+- Daily flights 0%
+- Base / hub percentages all 0%
+- Programme timeline from announcement to early-2028 target
+
+Live path after deploy: `/program/starlink`
+
+## Other tools
 
 - Free 15-minute delayed practice feed
 - Footprint-style charts, volume/delta profiles
@@ -31,6 +47,7 @@ Wrong Deploy command → Workers vs Pages error
 npm install
 npm run dev
 # http://localhost:3000
+# http://localhost:3000/program/starlink
 # http://localhost:3000/orderflow
 ```
 
