@@ -12,8 +12,3 @@ binding = "ASSETS"
 binding = "DB"
 database_name = "castair-db"
 database_id = "68f34dee-853c-4af0-bad9-e1ff3df11042"
-
-# Uncomment after creating R2 bucket:
-# [[r2_buckets]]
-# binding = "EVIDENCE"
-# bucket_name = "castair-evidence"
