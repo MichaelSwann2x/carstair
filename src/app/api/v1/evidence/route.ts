@@ -4,8 +4,6 @@ import { store, uid } from "@/lib/server/store";
 import { writeAudit } from "@/lib/server/audit";
 import { z } from "zod";
 
-export const runtime = "edge";
-
 /** Evidence metadata + base64 payload when R2 not bound; swap to R2 put when env.EVIDENCE available */
 const evidenceStore = (globalThis as unknown as { __ev?: Map<string, { meta: unknown; data: string }> }).__ev ??
   ((globalThis as unknown as { __ev: Map<string, { meta: unknown; data: string }> }).__ev = new Map());
