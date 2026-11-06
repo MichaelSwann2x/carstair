@@ -5,8 +5,6 @@ import { writeAudit } from "@/lib/server/audit";
 import { z } from "zod";
 import type { Approval } from "@/lib/server/types";
 
-export const runtime = "edge";
-
 export async function GET(req: NextRequest) {
   const session = requireSession(req);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
