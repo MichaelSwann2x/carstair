@@ -9,8 +9,6 @@ import {
 import { getQuotaState } from "@/security/storage/quota";
 import { z } from "zod";
 
-export const runtime = "edge";
-
 export async function GET(req: NextRequest) {
   const session = requireSession(req);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
