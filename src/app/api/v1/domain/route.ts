@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/server/auth";
 import { store } from "@/lib/server/store";
 
-export const runtime = "edge";
-
 /** Bundle domain lists for app shell hydration */
 export async function GET(req: NextRequest) {
   const session = requireSession(req);
