@@ -4,8 +4,6 @@ import { mintSessionToken } from "@/lib/server/session-token";
 import type { Tenant, User } from "@/lib/server/types";
 import { z } from "zod";
 
-export const runtime = "edge";
-
 const Body = z.object({
   org: z.string().min(1),
   name: z.string().min(1),
