@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireSession } from "@/lib/server/auth";
 import { store } from "@/lib/server/store";
 
-export const runtime = "edge";
-
 export async function POST(req: NextRequest) {
   const session = requireSession(req);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
