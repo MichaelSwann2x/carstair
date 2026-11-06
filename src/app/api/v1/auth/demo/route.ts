@@ -5,8 +5,6 @@ import { mintSessionToken, roleLabel } from "@/lib/server/session-token";
 import type { Role, Tenant, User } from "@/lib/server/types";
 import { z } from "zod";
 
-export const runtime = "edge";
-
 const Body = z.object({
   role: z.enum(["inspector", "certifying_staff", "admin", "viewer"]).default("inspector"),
 });
