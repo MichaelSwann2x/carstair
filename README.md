@@ -1,54 +1,31 @@
 # Carstair
 
-Multi-tool platform. Includes the **easyJet Starlink pre-rollout tracker** at `/program/starlink`.
+**Carstair Wi-Fi Tracker** — sole public surface.
 
-## Starlink Tracker (easyJet)
+Path: `/program/tracker` (and `/` redirects there).
 
-Orange & white themed dashboard modelled on the United FleetRadar Starlink layout, fully zeroed because the programme has not started.
+Orange & white dashboard modelled on the United FleetRadar Starlink layout. All metrics zeroed (pre-rollout).
 
 - Flight number search (returns pre-rollout message)
 - Fleet completion 0%
-- 0 aircraft installed (A320 / A320neo / A321neo in scope)
-- A319 noted as excluded
+- 0 aircraft installed
 - Daily flights 0%
 - Base / hub percentages all 0%
-- Programme timeline from announcement to early-2028 target
+- No orderflow, no journal, no sign-in / sign-up
 
-Live path after deploy: `/program/starlink`
+## Cloudflare Pages
 
-## Other tools
-
-- Free 15-minute delayed practice feed
-- Footprint-style charts, volume/delta profiles
-- Markets: Ind&Com, Forex, Energy, Majors, PrecMet, Ind&Com3, Exotic, Cryptocurrencies
-- 50+ model previews
-- Journal / prop desk routes still present
-
-## Cloudflare Pages (one-shot)
-
-**Read [CONNECT.md](./CONNECT.md) before connecting the repo.**
-
-Exact settings:
-
-| Field | Value |
-|--------|--------|
-| Build command | `npx @cloudflare/next-on-pages@1` |
-| Build output directory | `.vercel/output/static` |
-| Root directory | *empty* |
-| Deploy command | *empty* |
-| Node | 20 |
-
-Wrong Root directory → `Failed: root directory not found`  
-Wrong Deploy command → Workers vs Pages error
+Build command: `npx @cloudflare/next-on-pages@1`  
+Build output directory: `.vercel/output/static`  
+Root directory: empty  
+Node: 20
 
 ## Local
 
 ```bash
 npm install
 npm run dev
-# http://localhost:3000
-# http://localhost:3000/program/starlink
-# http://localhost:3000/orderflow
+# http://localhost:3000  →  /program/tracker
 ```
 
 ## Stack
