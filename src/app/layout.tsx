@@ -2,9 +2,19 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Carstair — Retail CFD Orderflow & Multi-Tool Platform",
-  description: "Free 15-minute delayed orderflow tools, footprint charts, 50+ models, journal, prop desk. Practice and learn with Carstair.",
+  title: {
+    default: "Carstair",
+    template: "%s · Carstair",
+  },
+  description:
+    "Is Carstair Wi-Fi on your flight? Check for Starlink availability on your flight up to three days before departure. Search by flight number.",
   icons: { icon: "/favicon.svg" },
+  openGraph: {
+    title: "Carstair",
+    description:
+      "Is Carstair Wi-Fi on your flight? Check for Starlink availability on your flight up to three days before departure. Search by flight number.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased min-h-screen bg-[#050608] text-[#f1f5f9]">{children}</body>
+      <body className="antialiased min-h-screen">{children}</body>
     </html>
   );
 }
