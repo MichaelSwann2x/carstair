@@ -5,8 +5,6 @@ import { writeAudit } from "@/lib/server/audit";
 import { canCertify } from "@/lib/server/types";
 import { z } from "zod";
 
-export const runtime = "edge";
-
 const Body = z.object({
   kind: z.enum(["performer", "rii"]),
 });
