@@ -3,14 +3,14 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Carstair",
+    default: "Carstair Wi-Fi Tracker",
     template: "%s · Carstair",
   },
   description:
     "Is Carstair Wi-Fi on your flight? Check for Starlink availability on your flight up to three days before departure. Search by flight number.",
   icons: { icon: "/favicon.svg" },
   openGraph: {
-    title: "Carstair",
+    title: "Carstair Wi-Fi Tracker",
     description:
       "Is Carstair Wi-Fi on your flight? Check for Starlink availability on your flight up to three days before departure. Search by flight number.",
     type: "website",
