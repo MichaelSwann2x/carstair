@@ -10,12 +10,5 @@
   },
   "observability": {
     "enabled": true
-  },
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "castair-db",
-      "database_id": "68f34dee-853c-4af0-bad9-e1ff3df11042"
-    }
-  ]
+  }
 }
