@@ -1,14 +1,19 @@
 name = "carstair"
-compatibility_date = "2024-09-23"
+compatibility_date = "2025-10-01"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+
+main = ".open-next/worker.js"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "castair-db"
 database_id = "68f34dee-853c-4af0-bad9-e1ff3df11042"
 
-# Uncomment after creating R2 bucket castair-evidence:
+# Uncomment after creating R2 bucket:
 # [[r2_buckets]]
 # binding = "EVIDENCE"
 # bucket_name = "castair-evidence"
